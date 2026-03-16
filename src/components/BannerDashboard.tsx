@@ -64,6 +64,8 @@ export default function BannerDashboard() {
     return () => clearInterval(tickerTimer);
   }, [newsList]);
 
+  const [quizResult, setQuizResult] = useState<string | null>(null);
+
   const handleNewsClick = () => {
     const activeNews = newsList[currentNews];
     if (activeNews && activeNews.link.startsWith('http')) {
@@ -75,6 +77,12 @@ export default function BannerDashboard() {
 
   const handleWeatherClick = () => {
     window.open('https://weather.naver.com/today/02480101', '_blank');
+  };
+
+  const closeModals = () => {
+    setShowSafetyQuiz(false);
+    setShowCheckQuiz(false);
+    setQuizResult(null);
   };
 
   return (
@@ -128,37 +136,69 @@ export default function BannerDashboard() {
 
       {/* Quiz Modal: Safety */}
       {showSafetyQuiz && (
-        <div className={styles.modalOverlay} onClick={() => setShowSafetyQuiz(false)}>
+        <div className={styles.modalOverlay} onClick={closeModals}>
           <div className={styles.modal} onClick={e => e.stopPropagation()}>
-            <button className={styles.closeBtn} onClick={() => setShowSafetyQuiz(false)}>✕</button>
+            <button className={styles.closeBtn} onClick={closeModals}>✕</button>
             <div className={styles.modalTag}>안전 진단</div>
             <h2>중대재해처벌법 대비 자가진단</h2>
-            <div className={styles.quizQuestion}>
-              Q. 사업장 내 유해·위험요인을 파악하고 개선하는 절차(위험성평가)를 주기적으로 실시하고 있나요?
-            </div>
-            <div className={styles.quizOptions}>
-              <button className={styles.optionBtn} onClick={() => alert('훌륭합니다! 정기적인 교육도 잊지 마세요.')}>예, 정기적으로 실시하고 있습니다.</button>
-              <button className={styles.optionBtn} onClick={() => alert('센터의 컨설팅 지원이 필요합니다. 관리자에게 문의하세요.')}>아니오, 절차가 필요합니다.</button>
-              <button className={styles.optionBtn} onClick={() => alert('센터를 방문해 주시면 위험성평가 가이드를 제공해 드립니다.')}>잘 모르겠습니다.</button>
-            </div>
+            
+            {!quizResult ? (
+              <>
+                <div className={styles.quizQuestion}>
+                  Q. 사업장 내 유해·위험요인을 파악하고 개선하는 절차(위험성평가)를 주기적으로 실시하고 있나요?
+                </div>
+                <div className={styles.quizOptions}>
+                  <button className={styles.optionBtn} onClick={() => setQuizResult('훌륭합니다! 정기적인 교육도 잊지 마세요.')}>
+                    예, 정기적으로 실시하고 있습니다.
+                  </button>
+                  <button className={styles.optionBtn} onClick={() => setQuizResult('센터의 컨설팅 지원이 필요합니다. 관리자에게 문의하세요.')}>
+                    아니오, 절차가 필요합니다.
+                  </button>
+                  <button className={styles.optionBtn} onClick={() => setQuizResult('센터를 방문해 주시면 위험성평가 가이드를 제공해 드립니다.')}>
+                    잘 모르겠습니다.
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className={styles.resultView}>
+                <div className={styles.resultIcon}>✅</div>
+                <p>{quizResult}</p>
+                <button className={styles.actionBtn} onClick={closeModals}>확인</button>
+              </div>
+            )}
           </div>
         </div>
       )}
 
       {/* Quiz Modal: Check */}
       {showCheckQuiz && (
-        <div className={styles.modalOverlay} onClick={() => setShowCheckQuiz(false)}>
+        <div className={styles.modalOverlay} onClick={closeModals}>
           <div className={styles.modal} onClick={e => e.stopPropagation()}>
-            <button className={styles.closeBtn} onClick={() => setShowCheckQuiz(false)}>✕</button>
+            <button className={styles.closeBtn} onClick={closeModals}>✕</button>
             <div className={styles.modalTag}>자격 확인</div>
             <h2>소공인 지원대상 확인</h2>
-            <div className={styles.quizQuestion}>
-              귀사의 주된 업종이 제조(C)이며, 상시 근로자 수가 어떻게 되시나요?
-            </div>
-            <div className={styles.quizOptions}>
-              <button className={styles.optionBtn} onClick={() => alert('상시근로자 10인 미만 소공인 지원 대상에 해당됩니다!')}>10인 미만 (상시근로자)</button>
-              <button className={styles.optionBtn} onClick={() => alert('상시근로자 10인 이상은 일반 중소기업 지원 프로그램을 확인해 보세요.')}>10인 이상</button>
-            </div>
+
+            {!quizResult ? (
+              <>
+                <div className={styles.quizQuestion}>
+                  귀사의 주된 업종이 제조(C)이며, 상시 근로자 수가 어떻게 되시나요?
+                </div>
+                <div className={styles.quizOptions}>
+                  <button className={styles.optionBtn} onClick={() => setQuizResult('상시근로자 10인 미만 소공인 지원 대상에 해당됩니다!')}>
+                    10인 미만 (상시근로자)
+                  </button>
+                  <button className={styles.optionBtn} onClick={() => setQuizResult('상시근로자 10인 이상은 일반 중소기업 지원 프로그램을 확인해 보세요.')}>
+                    10인 이상
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className={styles.resultView}>
+                <div className={styles.resultIcon}>📢</div>
+                <p>{quizResult}</p>
+                <button className={styles.actionBtn} onClick={closeModals}>확인</button>
+              </div>
+            )}
           </div>
         </div>
       )}
