@@ -1,0 +1,227 @@
+.noticePage {
+  padding-bottom: 100px;
+}
+
+.banner {
+  background: #fbfbfd;
+  padding: 40px 0;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 40px;
+}
+
+.banner h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin-bottom: 8px;
+}
+
+.banner p {
+  font-size: 18px;
+  color: #86868b;
+}
+
+.boardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 12px;
+  padding: 0 15px;
+  width: 320px;
+  height: 44px;
+  border: 1px solid #d2d2d7;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.searchWrapper:focus-within {
+  border-color: #003366;
+  box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.1);
+}
+
+.searchWrapper input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.tableWrapper {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  border-top: 2px solid #1d1d1f;
+}
+
+.boardTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.boardTable th {
+  background: #fbfbfd;
+  padding: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1d1d1f;
+  border-bottom: 1px solid #e5e5e7;
+  text-align: center;
+}
+
+.boardTable td {
+  padding: 18px 20px;
+  border-bottom: 1px solid #f2f2f2;
+  font-size: 15px;
+  color: #1d1d1f;
+  text-align: center;
+}
+
+.boardTable tr:hover {
+  background: #f9f9fb;
+}
+
+.titleCell {
+  text-align: left !important;
+}
+
+.titleLink {
+  text-decoration: none;
+  color: #1d1d1f;
+  font-weight: 500;
+}
+
+.titleLink:hover {
+  text-decoration: underline;
+  color: #003366;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-right: 12px;
+  white-space: nowrap;
+}
+
+.badge.facility {
+  background: #e1f5fe;
+  color: #0288d1;
+}
+
+.badge.edu {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.badge.network {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.dateCell {
+  color: #86868b;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .banner {
+    padding: 30px 0;
+    margin-bottom: 20px;
+  }
+  .banner h1 {
+    font-size: 28px;
+  }
+  .banner p {
+    font-size: 15px;
+  }
+
+  .boardHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .searchWrapper {
+    width: 100%;
+    height: 40px;
+  }
+
+  /* Table to List Transformation */
+  .tableWrapper {
+    border: none;
+    background: transparent;
+  }
+  .boardTable, 
+  .boardTable thead, 
+  .boardTable tbody, 
+  .boardTable tr, 
+  .boardTable th, 
+  .boardTable td {
+    display: block;
+    width: 100%;
+  }
+
+  .boardTable thead {
+    display: none;
+  }
+
+  .boardTable tr {
+    background: #fff;
+    border: 1px solid #f0f0f2;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  .boardTable td {
+    padding: 0;
+    border: none;
+    text-align: left !important;
+  }
+
+  /* Hide Item Number */
+  .boardTable td:nth-child(1) {
+    display: none;
+  }
+
+  /* Category Badge */
+  .boardTable td:nth-child(2) {
+    margin-bottom: 10px;
+  }
+  .badge {
+    margin-right: 0;
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+
+  /* Title Cell */
+  .titleCell {
+    margin-bottom: 10px;
+  }
+  .titleLink {
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 700;
+  }
+
+  /* Date Cell */
+  .dateCell {
+    font-size: 12px;
+    color: #999;
+    display: flex;
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "/api/posts/route": "app/api/posts/route.js",
+  "/api/members/route": "app/api/members/route.js",
+  "/api/news/external/route": "app/api/news/external/route.js",
+  "/notice/page": "app/notice/page.js",
+  "/admin/login/page": "app/admin/login/page.js",
+  "/page": "app/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/signup/page": "app/signup/page.js"
+}

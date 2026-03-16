@@ -1,0 +1,655 @@
+/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/components/Header.module.css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************/
+.Header_header__MvnS2 {
+  width: 100%;
+  background: #fff; /* Unified white for legibility */
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.Header_topBar__UGeWF {
+  background: #fff;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.Header_utility__PmTll {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+}
+
+.Header_utility__PmTll a {
+  font-size: 12px;
+  color: #666;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.Header_langSwitch__W65WK {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #ddd;
+}
+
+.Header_langSwitch__W65WK button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: #999;
+  padding: 2px 4px;
+}
+
+.Header_langSwitch__W65WK button.Header_active__t8h51 {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.Header_mainHeader__TH34o {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0; /* Tight, professional height */
+  height: 72px;   /* Fixed height for stability */
+}
+
+.Header_logo__j7oID a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.Header_logoImg__NIVuW {
+  height: 42px; /* Slightly smaller for better balance */
+  width: auto;
+}
+
+.Header_logoText__gtMNE {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Header_title__cchLN {
+  font-size: 20px; /* More refined size */
+  font-weight: 800;
+  color: #003366;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+.Header_subtitle__MUOkM {
+  font-size: 9px; /* Smaller to act as a subtle base */
+  font-weight: 500;
+  color: #64748b;
+  letter-spacing: 0.01em;
+  margin-top: 1px;
+}
+
+.Header_nav__EE71E {
+  display: flex;
+  gap: 36px; /* Increased gap for 'breathability' */
+  align-items: center;
+  margin-left: auto; /* Push nav and right section to the right */
+  margin-right: 36px;
+}
+
+.Header_nav__EE71E a {
+  text-decoration: none;
+  font-weight: 700; /* Pretendard Bold */
+  font-size: 16px;
+  color: #1d1d1f;
+  padding: 8px 0;
+  transition: color 0.2s ease;
+  letter-spacing: -0.02em;
+}
+
+.Header_nav__EE71E a:hover {
+  color: #003366;
+}
+
+.Header_signupBtn__8sViw {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  background: linear-gradient(135deg, #004488 0%, #002244 100%) !important;
+  color: #ffffff !important;
+  padding: 0 36px !important; /* Reduced for better balance */
+  height: 40px !important;
+  min-width: 140px !important; /* Balanced minimum width */
+  border-radius: 980px !important;
+  font-size: 14.5px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  letter-spacing: -0.01em !important;
+  margin-left: 20px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  cursor: pointer !important;
+}
+
+.Header_signupBtn__8sViw:hover {
+  background: linear-gradient(135deg, #0055aa 0%, #003366 100%) !important;
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 0 8px 24px rgba(0, 51, 102, 0.3) !important;
+}
+
+.Header_searchBar__iqfaA {
+  display: flex;
+  align-items: center;
+  background: #f5f5f7;
+  padding: 0 16px;
+  height: 40px;
+  border-radius: 20px;
+  margin-left: 32px;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Slower for more effect */
+  border: 1px solid #e5e5e7;
+  width: 140px; /* Reduced default */
+}
+
+.Header_searchBar__iqfaA:focus-within {
+  background: #fff;
+  width: 320px; /* Maximum expansion */
+  box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.05);
+  border-color: #003366;
+}
+
+.Header_searchBar__iqfaA input {
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 4px;
+  font-size: 14px;
+  width: 100%;
+  color: #333;
+}
+
+.Header_searchBtn__HhEhJ {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+}
+
+.Header_searchBar__iqfaA:focus-within .Header_searchBtn__HhEhJ {
+  opacity: 0.8;
+  color: var(--primary);
+}
+
+.Header_mobileMenuBtn__u6v1o {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.Header_mobileSearch__LXhx4 {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .Header_topBar__UGeWF {
+    display: none;
+  }
+
+  .Header_mainHeader__TH34o {
+    padding: 0 20px;
+    height: 60px;
+  }
+
+  .Header_logoImg__NIVuW {
+    height: 32px;
+  }
+
+  .Header_title__cchLN {
+    font-size: 16px;
+  }
+
+  .Header_subtitle__MUOkM {
+    font-size: 8px;
+    display: none;
+  }
+
+  .Header_nav__EE71E {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: #fff;
+    flex-direction: column;
+    padding: 80px 30px;
+    gap: 20px;
+    align-items: flex-start;
+    margin: 0;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    z-index: 1001;
+  }
+
+  .Header_navOpen__uAq5h {
+    right: 0;
+  }
+
+  .Header_nav__EE71E a {
+    font-size: 18px;
+    width: 100%;
+    border-bottom: 1px solid #f5f5f7;
+    padding: 12px 0;
+  }
+
+  .Header_signupBtn__8sViw {
+    margin-left: 0 !important;
+    margin-top: 20px;
+    width: 100% !important;
+  }
+
+  .Header_searchBar__iqfaA {
+    display: none;
+  }
+
+  .Header_mobileSearch__LXhx4 {
+    display: flex;
+    width: 100%;
+    background: #f5f5f7;
+    border-radius: 12px;
+    padding: 10px 15px;
+    margin-top: 30px;
+  }
+
+  .Header_mobileSearch__LXhx4 input {
+    border: none;
+    background: none;
+    outline: none;
+    flex: 1 1;
+    font-size: 14px;
+  }
+
+  .Header_mobileSearch__LXhx4 button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .Header_mobileMenuBtn__u6v1o {
+    display: block;
+    z-index: 1002;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    transition: all 0.3s;
+    font-size: 28px;
+    color: #1d1d1f;
+  }
+
+  .Header_activeMenu__RS6jP {
+    color: #003366;
+  }
+
+  .Header_overlay__qJh_7 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.4);
+    -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+    z-index: 1000;
+  }
+}
+
+/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/components/Footer.module.css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************/
+.Footer_footer__UaG1g {
+  background: #f5f5f7;
+  padding: 80px 0;
+  border-top: 1px solid #e5e5e7;
+  color: #1d1d1f;
+  margin-top: 100px;
+}
+
+.Footer_content__Fi1S7 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.Footer_brand___zP6t h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.Footer_brand___zP6t p {
+  font-size: 14px;
+  color: #86868b;
+}
+
+.Footer_info__z1Rhg {
+  text-align: right;
+  font-size: 14px;
+  color: #86868b;
+  line-height: 1.6;
+}
+
+.Footer_copy__IbaoR {
+  margin-top: 20px;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .Footer_content__Fi1S7 {
+    flex-direction: column;
+    text-align: center;
+  }
+  .Footer_info__z1Rhg {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/app/signup/Signup.module.css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************/
+.Signup_signupPage__z1W_8 {
+  background: #fff;
+  min-height: 100vh;
+}
+
+.Signup_introSection__RkD_N {
+  padding: 100px 0;
+  animation: Signup_fadeIn__KvkGD 0.8s ease-out;
+}
+
+.Signup_titleArea__1qyb_ {
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.Signup_mainTitle__QSpWK {
+  font-size: 42px;
+  font-weight: 800;
+  color: #1d1d1f;
+  line-height: 1.3;
+  margin-bottom: 24px;
+  word-break: keep-all;
+}
+
+.Signup_subTitle__TUiNI {
+  font-size: 18px;
+  color: #86868b;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+  word-break: keep-all;
+}
+
+.Signup_processGrid__3oI3x {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 30px;
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.Signup_processCard__INk8y {
+  background: #f5f5f7;
+  padding: 40px;
+  border-radius: 24px;
+  transition: transform 0.3s ease;
+}
+
+.Signup_processCard__INk8y:hover {
+  transform: translateY(-5px);
+}
+
+.Signup_stepIcon__4oAlD {
+  font-size: 32px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.Signup_stepTitle__smd8V {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin-bottom: 12px;
+}
+
+.Signup_stepDesc___fLXp {
+  font-size: 15px;
+  color: #424245;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.Signup_noticeBox__kiCAa {
+  background: #fff;
+  border: 1px solid #d2d2d7;
+  padding: 40px;
+  border-radius: 24px;
+  margin-bottom: 60px;
+}
+
+.Signup_noticeTitle__6fQme {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.Signup_noticeList__TuP8V {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.Signup_noticeItem__FIQLF {
+  font-size: 15px;
+  color: #86868b;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 12px;
+}
+
+.Signup_noticeItem__FIQLF b {
+  color: #1d1d1f;
+  min-width: 80px;
+}
+
+.Signup_highlightBanner__Jw4a9 {
+  background: linear-gradient(135deg, #003366, #0055aa);
+  color: #fff;
+  padding: 60px;
+  border-radius: 32px;
+  text-align: center;
+}
+
+.Signup_highlightText__AT22u {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  word-break: keep-all;
+}
+
+.Signup_actionBtn__5jEIf {
+  background: #fff;
+  color: #003366;
+  border: none;
+  padding: 18px 48px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.Signup_actionBtn__5jEIf:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.Signup_formSection__8vlKB {
+  padding: 100px 0;
+  max-width: 600px;
+  margin: 0 auto;
+  animation: Signup_slideUp__zmqvT 0.6s ease-out;
+}
+
+.Signup_formCard__Zc26t {
+  background: #fff;
+  padding: 50px;
+  border-radius: 32px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  border: 1px solid #f2f2f2;
+}
+
+.Signup_formHeader__bUzqC {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.Signup_formHeader__bUzqC h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1d1d1f;
+  margin-bottom: 12px;
+}
+
+.Signup_form__FvvBN {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.Signup_inputGroup__bNvEf {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.Signup_inputGroup__bNvEf label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1d1d1f;
+  padding-left: 4px;
+}
+
+.Signup_inputGroup__bNvEf input {
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid #d2d2d7;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.Signup_inputGroup__bNvEf input:focus {
+  outline: none;
+  border-color: #003366;
+  box-shadow: 0 0 0 4px rgba(0,51,102,0.1);
+}
+
+.Signup_submitBtn__sqYlC {
+  background: #003366;
+  color: #fff;
+  border: none;
+  padding: 20px;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.2s ease;
+}
+
+.Signup_submitBtn__sqYlC:hover {
+  background: #004488;
+}
+
+.Signup_successArea__RHRSJ {
+  text-align: center;
+  padding: 60px 0;
+}
+
+@keyframes Signup_fadeIn__KvkGD {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes Signup_slideUp__zmqvT {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .Signup_introSection__RkD_N {
+    padding: 60px 0;
+  }
+  .Signup_mainTitle__QSpWK { 
+    font-size: 28px; 
+    margin-bottom: 16px;
+  }
+  .Signup_subTitle__TUiNI {
+    font-size: 15px;
+  }
+  .Signup_processGrid__3oI3x { 
+    grid-template-columns: 1fr; 
+    gap: 20px;
+  }
+  .Signup_processCard__INk8y {
+    padding: 30px 20px;
+  }
+  .Signup_noticeBox__kiCAa {
+    padding: 30px 20px;
+  }
+  .Signup_highlightBanner__Jw4a9 { 
+    padding: 40px 20px; 
+  }
+  .Signup_highlightText__AT22u {
+    font-size: 18px;
+  }
+  .Signup_actionBtn__5jEIf {
+    padding: 15px 32px;
+    font-size: 16px;
+    width: 100%;
+  }
+  .Signup_formSection__8vlKB {
+    padding: 60px 0;
+  }
+  .Signup_formCard__Zc26t { 
+    padding: 30px 20px;
+    border-radius: 20px;
+  }
+  .Signup_formHeader__bUzqC h2 {
+    font-size: 24px;
+  }
+  .Signup_inputGroup__bNvEf input {
+    padding: 14px 16px;
+  }
+  .Signup_submitBtn__sqYlC {
+    padding: 16px;
+  }
+}
+

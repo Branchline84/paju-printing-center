@@ -1,0 +1,279 @@
+.noticePage {
+  padding-bottom: 100px;
+}
+
+.banner {
+  background: #fbfbfd;
+  padding: 40px 0; /* Reduced from 80px */
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 40px;
+}
+
+.banner h1 {
+  font-size: 32px; /* Slightly smaller for balance */
+  font-weight: 700;
+  color: #1d1d1f;
+  margin-bottom: 8px;
+}
+
+.banner p {
+  font-size: 18px;
+  color: #86868b;
+}
+
+.boardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.tabs {
+  display: flex;
+  gap: 15px;
+}
+
+.tabs button {
+  padding: 8px 24px;
+  border-radius: 20px;
+  border: 1px solid #d2d2d7;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1d1d1f;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tabs button.active {
+  background: #003366;
+  color: #fff;
+  border-color: #003366;
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  background: #fff; /* White background for contrast */
+  border-radius: 12px;
+  padding: 0 15px;
+  width: 320px;
+  height: 44px;
+  border: 1px solid #d2d2d7; /* Clearer border */
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.searchWrapper:focus-within {
+  border-color: #003366;
+  box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.1);
+}
+
+.searchWrapper input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+/* Table Design */
+.tableWrapper {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  border-top: 2px solid #1d1d1f;
+}
+
+.boardTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.boardTable th {
+  background: #fbfbfd;
+  padding: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1d1d1f;
+  border-bottom: 1px solid #e5e5e7;
+  text-align: center;
+}
+
+.boardTable td {
+  padding: 18px 20px;
+  border-bottom: 1px solid #f2f2f2;
+  font-size: 15px;
+  color: #1d1d1f;
+  text-align: center;
+}
+
+.boardTable tr:last-child td {
+  border-bottom: none;
+}
+
+.boardTable tr {
+  transition: background 0.2s;
+}
+
+.boardTable tr:hover {
+  background: #f9f9fb;
+}
+
+.titleCell {
+  text-align: left !important;
+}
+
+.titleLink {
+  text-decoration: none;
+  color: #1d1d1f;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.titleLink:hover {
+  text-decoration: underline;
+  color: #003366;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-right: 12px;
+  white-space: nowrap;
+}
+
+.badge.notice {
+  background: #fff0f0;
+  color: #e30000;
+  border: 1px solid rgba(227, 0, 0, 0.1);
+}
+
+.badge.news {
+  background: #e1f5fe;
+  color: #0288d1;
+  border: 1px solid rgba(2, 136, 209, 0.1);
+}
+
+.dateCell {
+  color: #86868b;
+  font-size: 14px;
+}
+
+.emptyState {
+  padding: 100px 0;
+  text-align: center;
+  color: #86868b;
+}
+
+@media (max-width: 768px) {
+  .banner {
+    padding: 30px 0;
+    margin-bottom: 20px;
+  }
+  .banner h1 {
+    font-size: 28px;
+  }
+  .banner p {
+    font-size: 15px;
+  }
+
+  .boardHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .tabs {
+    overflow-x: auto;
+    padding-bottom: 5px;
+    gap: 10px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .tabs button {
+    padding: 6px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .searchWrapper {
+    width: 100%;
+    height: 40px;
+  }
+
+  /* Table to List Transformation */
+  .tableWrapper {
+    border: none;
+    background: transparent;
+  }
+  .boardTable, 
+  .boardTable thead, 
+  .boardTable tbody, 
+  .boardTable tr, 
+  .boardTable th, 
+  .boardTable td {
+    display: block;
+    width: 100%;
+  }
+
+  .boardTable thead {
+    display: none; /* Hide header names */
+  }
+
+  .boardTable tr {
+    background: #fff;
+    border: 1px solid #f0f0f2;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  .boardTable td {
+    padding: 0;
+    border: none;
+    text-align: left !important;
+  }
+
+  /* Hide Item Number */
+  .boardTable td:nth-child(1) {
+    display: none;
+  }
+
+  /* Category Badge */
+  .boardTable td:nth-child(2) {
+    margin-bottom: 10px;
+  }
+  .badge {
+    margin-right: 0;
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+
+  /* Title Cell */
+  .titleCell {
+    margin-bottom: 10px;
+  }
+  .titleLink {
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 700;
+  }
+
+  /* Date Cell */
+  .dateCell {
+    font-size: 12px;
+    color: #999;
+    display: flex;
+    justify-content: flex-end; /* Align date to right within the card */
+  }
+}

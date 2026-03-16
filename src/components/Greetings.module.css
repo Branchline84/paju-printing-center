@@ -1,0 +1,113 @@
+.greetingsSection {
+  padding: 60px 0;
+}
+
+.card {
+  background: var(--primary);
+  background-image: linear-gradient(135deg, var(--primary) 0%, #004488 100%);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0, 51, 102, 0.2);
+  position: relative;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2v-4h4v-2H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.textContent {
+  padding: 40px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.sectionTitle {
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+
+.message {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.message p {
+  margin-bottom: 8px;
+}
+
+.signatureArea {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 10px;
+  position: relative;
+}
+
+.label {
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: -0.01em;
+  margin-bottom: 5px;
+}
+
+.signature {
+  font-family: 'Nanum Brush Script', cursive;
+  font-size: 64px;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  transform: rotate(-2deg);
+  display: inline-block;
+  user-select: none;
+  position: relative;
+  margin-right: 14px;
+  letter-spacing: 2px;
+}
+
+.moreBtn {
+  display: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+}
+
+@media (max-width: 768px) {
+  .textContent {
+    padding: 30px 20px;
+  }
+  .sectionTitle {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  .message {
+    font-size: 15px;
+  }
+  .collapsed .extraContent {
+    display: none;
+  }
+  .moreBtn {
+    display: inline-block;
+  }
+  .signature {
+    font-size: 32px;
+  }
+}

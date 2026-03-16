@@ -1,0 +1,104 @@
+/*!********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/app/admin/login/Login.module.css ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************/
+.Login_loginPage__jFdmr {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fbfbfd;
+  padding: 20px;
+}
+
+.Login_loginCard__zHlSG {
+  background: #fff;
+  padding: 48px;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+  border: 1px solid #e5e5e7;
+  text-align: center;
+}
+
+.Login_logoArea___KacR {
+  margin-bottom: 32px;
+}
+
+.Login_logoArea___KacR h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1d1d1f;
+  letter-spacing: -0.02em;
+}
+
+.Login_logoArea___KacR p {
+  font-size: 14px;
+  color: #86868b;
+  margin-top: 8px;
+}
+
+.Login_formGroup__odQvm {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.Login_formGroup__odQvm label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-bottom: 8px;
+}
+
+.Login_formGroup__odQvm input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #d2d2d7;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
+  background: #fff;
+}
+
+.Login_formGroup__odQvm input:focus {
+  border-color: #0071e3;
+  box-shadow: 0 0 0 4px rgba(0,113,227,0.1);
+}
+
+.Login_loginBtn__aQ9S1 {
+  width: 100%;
+  padding: 14px;
+  background: #0071e3;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 12px;
+}
+
+.Login_loginBtn__aQ9S1:hover {
+  background: #0077ed;
+  transform: translateY(-1px);
+}
+
+.Login_errorMsg__4CX9Q {
+  background: #fff1f0;
+  color: #ff3b30;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,59,48,0.1);
+}
+
+.Login_footer__43wFe {
+  margin-top: 40px;
+  font-size: 12px;
+  color: #86868b;
+}
+

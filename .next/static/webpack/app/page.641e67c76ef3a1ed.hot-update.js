@@ -1,0 +1,21 @@
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+self["webpackHotUpdate_N_E"]("app/page",{
+
+/***/ "(app-pages-browser)/./src/components/Banner.module.css":
+/*!******************************************!*\
+  !*** ./src/components/Banner.module.css ***!
+  \******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+eval(__webpack_require__.ts("// extracted by mini-css-extract-plugin\nmodule.exports = {\"banner\":\"Banner_banner__1HLwi\",\"slidesContainer\":\"Banner_slidesContainer__gRs_V\",\"slide\":\"Banner_slide__2A12r\",\"active\":\"Banner_active__MYPtE\",\"bannerImg\":\"Banner_bannerImg__hw_3e\",\"content\":\"Banner_content__pg7wz\",\"textSide\":\"Banner_textSide__D84SX\",\"title\":\"Banner_title__RXAFA\",\"fadeInUp\":\"Banner_fadeInUp__zH6Tw\",\"subtitle\":\"Banner_subtitle__OP4Hk\",\"dots\":\"Banner_dots__LZEaM\",\"dot\":\"Banner_dot__2myu_\",\"activeDot\":\"Banner_activeDot__YSy4C\",\"dashboardWrapper\":\"Banner_dashboardWrapper__QzITJ\"};\n    if(true) {\n      // 1773391920544\n      var cssReload = __webpack_require__(/*! ./node_modules/next/dist/compiled/mini-css-extract-plugin/hmr/hotModuleReplacement.js */ \"(app-pages-browser)/./node_modules/next/dist/compiled/mini-css-extract-plugin/hmr/hotModuleReplacement.js\")(module.id, {\"publicPath\":\"/_next/\",\"esModule\":false,\"locals\":true});\n      module.hot.dispose(cssReload);\n      \n    }\n  \nmodule.exports.__checksum = \"a172183de1f5\"\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwcC1wYWdlcy1icm93c2VyKS8uL3NyYy9jb21wb25lbnRzL0Jhbm5lci5tb2R1bGUuY3NzIiwibWFwcGluZ3MiOiJBQUFBO0FBQ0Esa0JBQWtCO0FBQ2xCLE9BQU8sSUFBVTtBQUNqQjtBQUNBLHNCQUFzQixtQkFBTyxDQUFDLHdNQUFpSixjQUFjLHNEQUFzRDtBQUNuUCxNQUFNLFVBQVU7QUFDaEI7QUFDQTtBQUNBO0FBQ0EseUJBQXlCIiwic291cmNlcyI6WyJDOlxcVXNlcnNcXGFcXC5nZW1pbmlcXGFudGlncmF2aXR5XFxzY3JhdGNoXFxwYWp1LXByaW50aW5nLWNlbnRlclxcc3JjXFxjb21wb25lbnRzXFxCYW5uZXIubW9kdWxlLmNzcyJdLCJzb3VyY2VzQ29udGVudCI6WyIvLyBleHRyYWN0ZWQgYnkgbWluaS1jc3MtZXh0cmFjdC1wbHVnaW5cbm1vZHVsZS5leHBvcnRzID0ge1wiYmFubmVyXCI6XCJCYW5uZXJfYmFubmVyX18xSEx3aVwiLFwic2xpZGVzQ29udGFpbmVyXCI6XCJCYW5uZXJfc2xpZGVzQ29udGFpbmVyX19nUnNfVlwiLFwic2xpZGVcIjpcIkJhbm5lcl9zbGlkZV9fMkExMnJcIixcImFjdGl2ZVwiOlwiQmFubmVyX2FjdGl2ZV9fTVlQdEVcIixcImJhbm5lckltZ1wiOlwiQmFubmVyX2Jhbm5lckltZ19faHdfM2VcIixcImNvbnRlbnRcIjpcIkJhbm5lcl9jb250ZW50X19wZzd3elwiLFwidGV4dFNpZGVcIjpcIkJhbm5lcl90ZXh0U2lkZV9fRDg0U1hcIixcInRpdGxlXCI6XCJCYW5uZXJfdGl0bGVfX1JYQUZBXCIsXCJmYWRlSW5VcFwiOlwiQmFubmVyX2ZhZGVJblVwX196SDZUd1wiLFwic3VidGl0bGVcIjpcIkJhbm5lcl9zdWJ0aXRsZV9fT1A0SGtcIixcImRvdHNcIjpcIkJhbm5lcl9kb3RzX19MWkVhTVwiLFwiZG90XCI6XCJCYW5uZXJfZG90X18ybXl1X1wiLFwiYWN0aXZlRG90XCI6XCJCYW5uZXJfYWN0aXZlRG90X19ZU3k0Q1wiLFwiZGFzaGJvYXJkV3JhcHBlclwiOlwiQmFubmVyX2Rhc2hib2FyZFdyYXBwZXJfX1F6SVRKXCJ9O1xuICAgIGlmKG1vZHVsZS5ob3QpIHtcbiAgICAgIC8vIDE3NzMzOTE5MjA1NDRcbiAgICAgIHZhciBjc3NSZWxvYWQgPSByZXF1aXJlKFwiQzovVXNlcnMvYS8uZ2VtaW5pL2FudGlncmF2aXR5L3NjcmF0Y2gvcGFqdS1wcmludGluZy1jZW50ZXIvbm9kZV9tb2R1bGVzL25leHQvZGlzdC9jb21waWxlZC9taW5pLWNzcy1leHRyYWN0LXBsdWdpbi9obXIvaG90TW9kdWxlUmVwbGFjZW1lbnQuanNcIikobW9kdWxlLmlkLCB7XCJwdWJsaWNQYXRoXCI6XCIvX25leHQvXCIsXCJlc01vZHVsZVwiOmZhbHNlLFwibG9jYWxzXCI6dHJ1ZX0pO1xuICAgICAgbW9kdWxlLmhvdC5kaXNwb3NlKGNzc1JlbG9hZCk7XG4gICAgICBcbiAgICB9XG4gIFxubW9kdWxlLmV4cG9ydHMuX19jaGVja3N1bSA9IFwiYTE3MjE4M2RlMWY1XCJcbiJdLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(app-pages-browser)/./src/components/Banner.module.css\n"));
+
+/***/ })
+
+});

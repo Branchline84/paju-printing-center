@@ -1,0 +1,236 @@
+.dashboard {
+  position: absolute;
+  right: 0;
+  top: 20px; /* Fixed from top for maximum visibility */
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Tighter gap to fit more cards */
+  width: 300px; /* Slightly narrower */
+}
+
+.newsCardContent {
+  height: 24px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.newsItem {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  color: #eee;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.5s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activeNews {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 16px 20px; /* More compact */
+  color: #fff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.card:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateX(-10px);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.cardDesc {
+  font-size: 13px;
+  opacity: 0.7;
+  line-height: 1.5;
+}
+
+/* Weather Specific */
+.weatherGrid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.temp {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.weatherInfo {
+  text-align: right;
+}
+
+.dustBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.dustGood { background: #4caf50; }
+.dustNormal { background: #ff9800; }
+.dustBad { background: #f44336; }
+
+/* Modal Styling */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal {
+  background: #fff;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 24px;
+  padding: 40px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal h2 {
+  font-size: 24px;
+  color: #1d1d1f;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+
+.modalTag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #f0f0f5;
+  color: #003366;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.quizQuestion {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.quizOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.optionBtn {
+  padding: 16px 20px;
+  border: 1px solid #e5e5e7;
+  border-radius: 12px;
+  background: #fbfbfd;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.optionBtn:hover {
+  background: #f0f0f5;
+  border-color: #003366;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+}
+
+@media (max-width: 1024px) {
+  .dashboard {
+    position: relative;
+    right: auto;
+    top: auto;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+    gap: 15px;
+    margin-top: 0;
+    z-index: 10;
+  }
+  .card {
+    flex: none;
+    width: 100%;
+    transform: none !important;
+  }
+  .card:hover { 
+    transform: translateY(-5px) !important; 
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    background: transparent; /* Keep glass look */
+    padding: 0 20px 40px;
+  }
+  .card {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+  }
+  .cardHeader { color: #fff; opacity: 0.9; }
+  .cardDesc { color: rgba(255, 255, 255, 0.8); }
+  .temp { color: #fff; }
+}

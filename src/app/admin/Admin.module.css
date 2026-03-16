@@ -1,0 +1,237 @@
+.adminPage {
+  padding-bottom: 100px;
+  background: #fbfbfd;
+  min-height: 100vh;
+}
+
+.adminHeader {
+  padding: 60px 0 40px;
+  border-bottom: 1px solid #e5e5e7;
+  margin-bottom: 40px;
+}
+
+.adminHeader h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin-bottom: 24px;
+}
+
+.adminTabs {
+  display: flex;
+  gap: 12px;
+}
+
+.adminTabs button {
+  padding: 10px 24px;
+  border-radius: 980px;
+  border: 1px solid #d2d2d7;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1d1d1f;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.adminTabs button.active {
+  background: #1d1d1f;
+  color: #fff;
+  border-color: #1d1d1f;
+}
+
+.actionRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.createBtn {
+  background: #003366;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.createBtn:hover {
+  opacity: 0.9;
+}
+
+.contentTable {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e5e7;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.adminTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.adminTable th {
+  background: #fbfbfd;
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 13px;
+  color: #86868b;
+  border-bottom: 1px solid #e5e5e7;
+}
+
+.adminTable td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f2f2f2;
+  font-size: 14px;
+  color: #1d1d1f;
+}
+
+/* Modal / Form Styling */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+.modalContent {
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.modalContent h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1d1d1f;
+}
+
+.formGroup input, 
+.formGroup select, 
+.formGroup textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d2d2d7;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.formGroup textarea {
+  height: 150px;
+  resize: vertical;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.cancelBtn {
+  background: #f5f5f7;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submitBtn {
+  background: #1d1d1f;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submitBtn:hover {
+  background: #000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.editActionBtn, .deleteActionBtn, .approveBtn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  white-space: nowrap;
+}
+
+.editActionBtn {
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+.editActionBtn:hover {
+  background: #e8e8ed;
+  transform: translateY(-1px);
+}
+
+.deleteActionBtn {
+  background: #fff1f0;
+  color: #ff3b30;
+}
+
+.deleteActionBtn:hover {
+  background: #ff3b30;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);
+}
+
+.approveBtn {
+  background: #eafaf1;
+  color: #34c759;
+}
+
+.approveBtn:hover {
+  background: #34c759;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2;
+}
