@@ -450,7 +450,7 @@ export default function AdminPage() {
 
       {isModalOpen && (
         <div className={styles.modal}>
-          <div className={styles.modalContent}>
+          <div className={styles.modalContent} key={editingId || 'new'}>
             <h3>{activeTab === 'banners' ? (editingId ? '배너 수정' : '새 배너 등록') : (editingId ? '게시물 수정' : '새 게시물 작성')}</h3>
             {activeTab === 'banners' ? (
               <form onSubmit={handleSubmitBanner}>
