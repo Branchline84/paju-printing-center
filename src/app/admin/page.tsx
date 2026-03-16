@@ -1,6 +1,8 @@
+```
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { upload } from '@vercel/blob/client';
 import Header from '@/components/Header';
 import { useRouter } from 'next/navigation';
 import styles from './Admin.module.css';
@@ -79,19 +81,13 @@ export default function AdminPage() {
     for (let i = 0; i < files.length; i++) {
       try {
         const file = files[i];
-        const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
-          method: 'POST',
-          body: file,
+        const newBlob = await upload(file.name, file, {
+          access: 'public',
+          handleUploadUrl: '/api/upload',
         });
         
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.error || 'Upload failed');
-        }
-
-        const data = await res.json();
-        if (data.url) {
-          newUrls.push(data.url);
+        if (newBlob.url) {
+          newUrls.push(newBlob.url);
         }
       } catch (error: any) {
         console.error('Upload failed', error);
@@ -109,19 +105,13 @@ export default function AdminPage() {
 
     setUploading(true);
     try {
-      const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
-        method: 'POST',
-        body: file,
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/upload',
       });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Upload failed');
-      }
-
-      const data = await res.json();
-      if (data.url) {
-        setNewBanner({ ...newBanner, imageUrl: data.url });
+      if (newBlob.url) {
+        setNewBanner({ ...newBanner, imageUrl: newBlob.url });
       }
     } catch (error: any) {
       console.error('Upload failed', error);
