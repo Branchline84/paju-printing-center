@@ -5,11 +5,12 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const post = await prisma.post.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
     });
 
     if (!post) {
@@ -25,11 +26,12 @@ export async function GET(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await prisma.post.delete({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
     });
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -40,12 +42,13 @@ export async function DELETE(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const post = await (prisma.post as any).update({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
       data: {
         type: body.type,
         title: body.title,
