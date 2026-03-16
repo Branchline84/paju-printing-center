@@ -41,7 +41,7 @@ export default function Banner() {
               id: b.id,
               title: b.title,
               subtitle: b.subtitle,
-              image: b.imageUrl
+              image: b.imageUrl || "/banner_printing_office.png"
             })));
           }
         }

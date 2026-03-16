@@ -75,7 +75,6 @@ export default function AdminPage() {
     }
 
     setUploading(true);
-    const newUrls = [...newPost.imageUrls];
 
     for (let i = 0; i < files.length; i++) {
       try {
@@ -86,7 +85,10 @@ export default function AdminPage() {
         });
         
         if (newBlob.url) {
-          newUrls.push(newBlob.url);
+          setNewPost(prev => ({
+            ...prev,
+            imageUrls: [...prev.imageUrls, newBlob.url]
+          }));
         }
       } catch (error: any) {
         console.error('Upload failed', error);
@@ -94,7 +96,6 @@ export default function AdminPage() {
       }
     }
     
-    setNewPost({ ...newPost, imageUrls: newUrls });
     setUploading(false);
   };
 
@@ -110,7 +111,7 @@ export default function AdminPage() {
       });
 
       if (newBlob.url) {
-        setNewBanner({ ...newBanner, imageUrl: newBlob.url });
+        setNewBanner(prev => ({ ...prev, imageUrl: newBlob.url }));
       }
     } catch (error: any) {
       console.error('Upload failed', error);
