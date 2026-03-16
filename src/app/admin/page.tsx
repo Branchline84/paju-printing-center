@@ -77,20 +77,25 @@ export default function AdminPage() {
     const newUrls = [...newPost.imageUrls];
 
     for (let i = 0; i < files.length; i++) {
-      const formData = new FormData();
-      formData.append('file', files[i]);
-
       try {
-        const res = await fetch('/api/upload', {
+        const file = files[i];
+        const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
           method: 'POST',
-          body: formData,
+          body: file,
         });
+        
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.error || 'Upload failed');
+        }
+
         const data = await res.json();
         if (data.url) {
           newUrls.push(data.url);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Upload failed', error);
+        alert(`업로드 실패: ${error.message || '파일 업로드 중 오류가 발생했습니다.'}`);
       }
     }
     
@@ -103,20 +108,24 @@ export default function AdminPage() {
     if (!file) return;
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-
     try {
-      const res = await fetch('/api/upload', {
+      const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
         method: 'POST',
-        body: formData,
+        body: file,
       });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Upload failed');
+      }
+
       const data = await res.json();
       if (data.url) {
         setNewBanner({ ...newBanner, imageUrl: data.url });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Upload failed', error);
+      alert(`배너 업로드 실패: ${error.message || '파일 업로드 중 오류가 발생했습니다.'}`);
     }
     setUploading(false);
   };
