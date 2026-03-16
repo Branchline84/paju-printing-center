@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const all = searchParams.get('all') === 'true';
+    
     const banners = await prisma.banner.findMany({
-      where: { isActive: true },
+      where: all ? {} : { isActive: true },
       orderBy: { order: 'asc' }
     });
     return NextResponse.json(banners);

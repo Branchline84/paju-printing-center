@@ -123,7 +123,8 @@ export default function AdminPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/${activeTab}`);
+      const url = activeTab === 'banners' ? `/api/banners?all=true` : `/api/${activeTab}`;
+      const res = await fetch(url);
       const json = await res.json();
       setData(Array.isArray(json) ? json : []);
     } catch (error) {
@@ -497,7 +498,14 @@ export default function AdminPage() {
                     setIsModalOpen(false);
                     setEditingId(null);
                   }}>취소</button>
-                  <button type="submit" className={styles.submitBtn}>{editingId ? '수정 완료' : '등록하기'}</button>
+                  <button 
+                    type="submit" 
+                    className={styles.submitBtn} 
+                    disabled={uploading}
+                    style={{ opacity: uploading ? 0.7 : 1, cursor: uploading ? 'not-allowed' : 'pointer' }}
+                  >
+                    {uploading ? '업로드 중...' : (editingId ? '수정 완료' : '등록하기')}
+                  </button>
                 </div>
               </form>
             ) : (
@@ -570,7 +578,14 @@ export default function AdminPage() {
                     setIsModalOpen(false);
                     setEditingId(null);
                   }}>취소</button>
-                  <button type="submit" className={styles.submitBtn}>{editingId ? '수정 완료' : '등록하기'}</button>
+                  <button 
+                    type="submit" 
+                    className={styles.submitBtn} 
+                    disabled={uploading}
+                    style={{ opacity: uploading ? 0.7 : 1, cursor: uploading ? 'not-allowed' : 'pointer' }}
+                  >
+                    {uploading ? '사진 업로드 중...' : (editingId ? '수정 완료' : '등록하기')}
+                  </button>
                 </div>
               </form>
             )}
