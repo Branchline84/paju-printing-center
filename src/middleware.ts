@@ -36,7 +36,6 @@ export async function middleware(request: NextRequest) {
   const adminApiPaths = [
     '/api/members',
     '/api/inquiries',
-    '/api/upload',
     '/api/posts',
   ];
 
