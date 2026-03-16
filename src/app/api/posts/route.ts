@@ -34,7 +34,7 @@ export async function POST(request: Request) {
         title: body.title,
         content: body.content,
         author: body.author,
-        imageUrls: body.imageUrls,
+        imageUrls: body.imageUrls ? JSON.stringify(body.imageUrls) : null,
         videoUrl: body.videoUrl,
       },
     });

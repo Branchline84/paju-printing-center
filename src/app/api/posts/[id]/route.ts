@@ -47,14 +47,14 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await request.json();
-    const post = await (prisma.post as any).update({
+    const post = await prisma.post.update({
       where: { id: parseInt(id) },
       data: {
         type: body.type,
         title: body.title,
         content: body.content,
         author: body.author,
-        imageUrls: body.imageUrls,
+        imageUrls: body.imageUrls ? JSON.stringify(body.imageUrls) : null,
         videoUrl: body.videoUrl,
       },
     });
