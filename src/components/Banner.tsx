@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './Banner.module.css';
 import BannerDashboard from './BannerDashboard';
 
-const banners = [
+const DEFAULT_BANNERS = [
   { 
     id: 1, 
     title: "파주인쇄소공인특화지원센터", 
@@ -27,22 +27,54 @@ const banners = [
 
 export default function Banner() {
   const [current, setCurrent] = useState(0);
+  const [banners, setBanners] = useState<any[]>(DEFAULT_BANNERS);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const res = await fetch('/api/banners');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setBanners(data.map((b: any) => ({
+              id: b.id,
+              title: b.title,
+              subtitle: b.subtitle,
+              image: b.imageUrl
+            })));
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch banners:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBanners();
+  }, []);
+
+  useEffect(() => {
+    if (banners.length <= 1) return;
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % banners.length);
     }, 6000); 
     return () => clearInterval(timer);
-  }, []);
+  }, [banners.length]);
+
+  if (loading && banners === DEFAULT_BANNERS) {
+    // Optionally show a skeleton or just wait for client-side load
+  }
+
+  const currentBanner = banners[current] || DEFAULT_BANNERS[0];
 
   return (
     <section className={styles.banner}>
-      {/* Universal Background that switches with slide */}
       <img 
-        src={banners[current].image} 
+        src={currentBanner.image} 
         alt="Background" 
         className={styles.bannerImg}
-        key={banners[current].image} // Force re-render/animation if needed
+        key={currentBanner.image} 
       />
       
       <div className={styles.slidesContainer}>

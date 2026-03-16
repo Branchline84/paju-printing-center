@@ -7,7 +7,7 @@ import styles from './Admin.module.css';
 import { getYouTubeEmbedUrl } from '@/lib/utils';
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'posts' | 'members' | 'inquiries'>('posts');
+  const [activeTab, setActiveTab] = useState<'posts' | 'members' | 'inquiries' | 'banners'>('posts');
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,6 +25,16 @@ export default function AdminPage() {
     imageUrls: [] as string[],
     videoUrl: ''
   });
+
+  // New banner state
+  const [newBanner, setNewBanner] = useState({
+    title: '',
+    subtitle: '',
+    imageUrl: '',
+    order: 0,
+    isActive: true
+  });
+
   const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
@@ -88,6 +98,29 @@ export default function AdminPage() {
     setUploading(false);
   };
 
+  const handleBannerFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.url) {
+        setNewBanner({ ...newBanner, imageUrl: data.url });
+      }
+    } catch (error) {
+      console.error('Upload failed', error);
+    }
+    setUploading(false);
+  };
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -129,7 +162,8 @@ export default function AdminPage() {
   const handleDeletePost = async (id: number) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
     try {
-      const res = await fetch(`/api/posts/${id}`, { method: 'DELETE' });
+      const url = activeTab === 'banners' ? `/api/banners/${id}` : `/api/posts/${id}`;
+      const res = await fetch(url, { method: 'DELETE' });
       if (res.ok) {
         fetchData();
         alert('삭제되었습니다.');
@@ -139,16 +173,49 @@ export default function AdminPage() {
     }
   };
 
+  const handleSubmitBanner = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const url = editingId ? `/api/banners/${editingId}` : '/api/banners';
+      const method = editingId ? 'PATCH' : 'POST';
+      
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newBanner)
+      });
+      if (res.ok) {
+        setIsModalOpen(false);
+        setEditingId(null);
+        setNewBanner({ title: '', subtitle: '', imageUrl: '', order: 0, isActive: true });
+        fetchData();
+        alert(editingId ? '배너가 수정되었습니다.' : '배너가 등록되었습니다.');
+      }
+    } catch (error) {
+      console.error('Error saving banner', error);
+    }
+  };
+
   const startEditPost = (post: any) => {
     setEditingId(post.id);
-    setNewPost({
-      title: post.title,
-      type: post.type,
-      content: post.content,
-      author: post.author || '관리자',
-      imageUrls: post.imageUrls ? JSON.parse(post.imageUrls) : [],
-      videoUrl: post.videoUrl || ''
-    });
+    if (activeTab === 'posts') {
+      setNewPost({
+        title: post.title,
+        type: post.type,
+        content: post.content,
+        author: post.author || '관리자',
+        imageUrls: post.imageUrls ? JSON.parse(post.imageUrls) : [],
+        videoUrl: post.videoUrl || ''
+      });
+    } else if (activeTab === 'banners') {
+      setNewBanner({
+        title: post.title,
+        subtitle: post.subtitle || '',
+        imageUrl: post.imageUrl,
+        order: post.order || 0,
+        isActive: post.isActive ?? true
+      });
+    }
     setIsModalOpen(true);
   };
 
@@ -210,20 +277,25 @@ export default function AdminPage() {
             </div>
             <div className={styles.adminTabs}>
               <button className={activeTab === 'posts' ? styles.active : ''} onClick={() => setActiveTab('posts')}>게시물 관리</button>
+              <button className={activeTab === 'banners' ? styles.active : ''} onClick={() => setActiveTab('banners')}>배너 관리</button>
               <button className={activeTab === 'members' ? styles.active : ''} onClick={() => setActiveTab('members')}>회원 가입</button>
               <button className={activeTab === 'inquiries' ? styles.active : ''} onClick={() => setActiveTab('inquiries')}>문의 내역</button>
             </div>
           </div>
 
         <div className={styles.actionRow}>
-          <h3>{activeTab === 'posts' ? '전체 게시물' : activeTab === 'members' ? '회원 목록' : '문의 접수 내역'}</h3>
-          {activeTab === 'posts' && (
+          <h3>{activeTab === 'posts' ? '전체 게시물' : activeTab === 'banners' ? '배너 목록' : activeTab === 'members' ? '회원 목록' : '문의 접수 내역'}</h3>
+          {(activeTab === 'posts' || activeTab === 'banners') && (
             <button className={styles.createBtn} onClick={() => {
               setEditingId(null);
-              setNewPost({ title: '', type: 'notice', content: '', author: '관리자', imageUrls: [], videoUrl: '' });
+              if (activeTab === 'posts') {
+                setNewPost({ title: '', type: 'notice', content: '', author: '관리자', imageUrls: [], videoUrl: '' });
+              } else {
+                setNewBanner({ title: '', subtitle: '', imageUrl: '', order: 0, isActive: true });
+              }
               setIsModalOpen(true);
             }}>
-              + 새 게시물 작성
+              + {activeTab === 'posts' ? '새 게시물 작성' : '새 배너 등록'}
             </button>
           )}
         </div>
@@ -236,7 +308,8 @@ export default function AdminPage() {
               <thead>
                 <tr>
                   <th style={{ width: '80px' }}>ID</th>
-                  <th>{activeTab === 'posts' ? '제목' : '이름/이메일'}</th>
+                  <th>{activeTab === 'posts' || activeTab === 'banners' ? '제목' : '이름/이메일'}</th>
+                  {activeTab === 'banners' && <th style={{ width: '150px' }}>미리보기</th>}
                   {activeTab === 'members' && <th>회사/연락처</th>}
                   {activeTab === 'inquiries' && <th>문의내용</th>}
                   <th style={{ width: '120px' }}>유형/상태</th>
@@ -250,13 +323,20 @@ export default function AdminPage() {
                     <td>{item.id}</td>
                     <td>
                       <div 
-                        style={{ fontWeight: 600, color: item.title ? '#003366' : 'inherit', cursor: item.title ? 'pointer' : 'default' }}
+                        style={{ fontWeight: 600, color: (item.title && activeTab === 'posts') ? '#003366' : 'inherit', cursor: (item.title && activeTab === 'posts') ? 'pointer' : 'default' }}
                         onClick={() => activeTab === 'posts' && setSelectedPost(item)}
                       >
                         {item.title || item.name}
                       </div>
-                      <div style={{ fontSize: '12px', color: '#86868b' }}>{item.email}</div>
+                      <div style={{ fontSize: '12px', color: '#86868b' }}>{activeTab === 'banners' ? item.subtitle : item.email}</div>
                     </td>
+                    {activeTab === 'banners' && (
+                      <td>
+                        <div style={{ width: '100px', height: '50px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #eee' }}>
+                          <img src={item.imageUrl} alt="banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                      </td>
+                    )}
                     {activeTab === 'members' && (
                       <td>
                         <div>{item.company || '-'}</div>
@@ -276,20 +356,21 @@ export default function AdminPage() {
                         padding: '2px 8px', 
                         borderRadius: '4px', 
                         fontSize: '12px',
-                        background: (item.approved || item.status === 'resolved') ? '#e8f5e9' : '#f0f0f2',
-                        color: (item.approved || item.status === 'resolved') ? '#2e7d32' : '#1d1d1f',
+                        background: (item.approved || item.status === 'resolved' || (activeTab === 'banners' && item.isActive)) ? '#e8f5e9' : '#f0f0f2',
+                        color: (item.approved || item.status === 'resolved' || (activeTab === 'banners' && item.isActive)) ? '#2e7d32' : '#1d1d1f',
                         fontWeight: 600
                       }}>
-                        {item.type === 'notice' ? '공지' : item.type === 'news' ? '소식' : 
+                        {activeTab === 'banners' ? (item.isActive ? '활성' : '비활성') : 
+                         (item.type === 'notice' ? '공지' : item.type === 'news' ? '소식' : 
                          item.type === 'support' ? '지원사업' :
                          (item.status === 'resolved' ? '처리완료' : item.status === 'pending' ? '미처리' : 
-                         (item.approved ? '승인완료' : '승인대기'))}
+                         (item.approved ? '승인완료' : '승인대기')))}
                       </span>
                     </td>
                     <td>{new Date(item.createdAt).toLocaleDateString()}</td>
                     <td>
                       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                        {activeTab === 'posts' && (
+                        {(activeTab === 'posts' || activeTab === 'banners') && (
                           <>
                             <button 
                               className={styles.editActionBtn} 
@@ -359,79 +440,141 @@ export default function AdminPage() {
       {isModalOpen && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h3>{editingId ? '게시물 수정' : '새 게시물 작성'}</h3>
-            <form onSubmit={handleSubmitPost}>
-              <div className={styles.formGroup}>
-                <label>구분</label>
-                <select 
-                  value={newPost.type} 
-                  onChange={(e) => setNewPost({...newPost, type: e.target.value})}
-                >
-                  <option value="notice">공지사항</option>
-                  <option value="news">센터소식</option>
-                  <option value="support">지원사업</option>
-                </select>
-              </div>
-              <div className={styles.formGroup}>
-                <label>제목</label>
-                <input 
-                  type="text" 
-                  value={newPost.title} 
-                  onChange={(e) => setNewPost({...newPost, title: e.target.value})}
-                  required
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>이미지 첨부 (최대 10장) {uploading && <span style={{ fontSize: '12px', color: '#003366' }}>(업로드 중...)</span>}</label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <h3>{activeTab === 'banners' ? (editingId ? '배너 수정' : '새 배너 등록') : (editingId ? '게시물 수정' : '새 게시물 작성')}</h3>
+            {activeTab === 'banners' ? (
+              <form onSubmit={handleSubmitBanner}>
+                <div className={styles.formGroup}>
+                  <label>제목</label>
                   <input 
-                    type="file" 
-                    accept="image/*"
-                    multiple
-                    onChange={handleFileUpload}
-                    disabled={newPost.imageUrls.length >= 10}
+                    type="text" 
+                    value={newBanner.title} 
+                    onChange={(e) => setNewBanner({...newBanner, title: e.target.value})}
+                    required
                   />
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
-                    {newPost.imageUrls.map((url, idx) => (
-                      <div key={idx} style={{ position: 'relative', height: '60px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #ddd' }}>
-                        <img src={url} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        <button 
-                          type="button"
-                          onClick={() => setNewPost({ ...newPost, imageUrls: newPost.imageUrls.filter((_, i) => i !== idx) })}
-                          style={{ position: 'absolute', top: 2, right: 2, background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '50%', width: '16px', height: '16px', fontSize: '10px', cursor: 'pointer' }}
-                        >
-                          ×
-                        </button>
+                </div>
+                <div className={styles.formGroup}>
+                  <label>부제목</label>
+                  <input 
+                    type="text" 
+                    value={newBanner.subtitle} 
+                    onChange={(e) => setNewBanner({...newBanner, subtitle: e.target.value})}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>배너 이미지 {uploading && <span style={{ fontSize: '12px', color: '#003366' }}>(업로드 중...)</span>}</label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={handleBannerFileUpload}
+                    />
+                    {newBanner.imageUrl && (
+                      <div style={{ width: '100%', height: '150px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd' }}>
+                        <img src={newBanner.imageUrl} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
-              </div>
-              <div className={styles.formGroup}>
-                <label>동영상 URL (선택)</label>
-                <input 
-                  type="text" 
-                  placeholder="Youtube 또는 영상 링크"
-                  value={newPost.videoUrl} 
-                  onChange={(e) => setNewPost({...newPost, videoUrl: e.target.value})}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>내용</label>
-                <textarea 
-                  value={newPost.content} 
-                  onChange={(e) => setNewPost({...newPost, content: e.target.value})}
-                  required
-                />
-              </div>
-              <div className={styles.modalActions}>
-                <button type="button" className={styles.cancelBtn} onClick={() => {
-                  setIsModalOpen(false);
-                  setEditingId(null);
-                }}>취소</button>
-                <button type="submit" className={styles.submitBtn}>{editingId ? '수정 완료' : '등록하기'}</button>
-              </div>
-            </form>
+                <div className={styles.formGroup}>
+                  <label>순서 (작은 숫자가 앞)</label>
+                  <input 
+                    type="number" 
+                    value={newBanner.order} 
+                    onChange={(e) => setNewBanner({...newBanner, order: parseInt(e.target.value)})}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <input 
+                      type="checkbox" 
+                      checked={newBanner.isActive} 
+                      onChange={(e) => setNewBanner({...newBanner, isActive: e.target.checked})}
+                    />
+                    활성화 여부
+                  </label>
+                </div>
+                <div className={styles.modalActions}>
+                  <button type="button" className={styles.cancelBtn} onClick={() => {
+                    setIsModalOpen(false);
+                    setEditingId(null);
+                  }}>취소</button>
+                  <button type="submit" className={styles.submitBtn}>{editingId ? '수정 완료' : '등록하기'}</button>
+                </div>
+              </form>
+            ) : (
+              <form onSubmit={handleSubmitPost}>
+                <div className={styles.formGroup}>
+                  <label>구분</label>
+                  <select 
+                    value={newPost.type} 
+                    onChange={(e) => setNewPost({...newPost, type: e.target.value})}
+                  >
+                    <option value="notice">공지사항</option>
+                    <option value="news">센터소식</option>
+                    <option value="support">지원사업</option>
+                  </select>
+                </div>
+                <div className={styles.formGroup}>
+                  <label>제목</label>
+                  <input 
+                    type="text" 
+                    value={newPost.title} 
+                    onChange={(e) => setNewPost({...newPost, title: e.target.value})}
+                    required
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>이미지 첨부 (최대 10장) {uploading && <span style={{ fontSize: '12px', color: '#003366' }}>(업로드 중...)</span>}</label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      multiple
+                      onChange={handleFileUpload}
+                      disabled={newPost.imageUrls.length >= 10}
+                    />
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
+                      {newPost.imageUrls.map((url, idx) => (
+                        <div key={idx} style={{ position: 'relative', height: '60px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #ddd' }}>
+                          <img src={url} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <button 
+                            type="button"
+                            onClick={() => setNewPost({ ...newPost, imageUrls: newPost.imageUrls.filter((_, i) => i !== idx) })}
+                            style={{ position: 'absolute', top: 2, right: 2, background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '50%', width: '16px', height: '16px', fontSize: '10px', cursor: 'pointer' }}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.formGroup}>
+                  <label>동영상 URL (선택)</label>
+                  <input 
+                    type="text" 
+                    placeholder="Youtube 또는 영상 링크"
+                    value={newPost.videoUrl} 
+                    onChange={(e) => setNewPost({...newPost, videoUrl: e.target.value})}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>내용</label>
+                  <textarea 
+                    value={newPost.content} 
+                    onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+                    required
+                  />
+                </div>
+                <div className={styles.modalActions}>
+                  <button type="button" className={styles.cancelBtn} onClick={() => {
+                    setIsModalOpen(false);
+                    setEditingId(null);
+                  }}>취소</button>
+                  <button type="submit" className={styles.submitBtn}>{editingId ? '수정 완료' : '등록하기'}</button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}
