@@ -14,6 +14,7 @@ export default function AdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<any>(null); // For viewing content
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const router = useRouter();
   const [isAuth, setIsAuth] = useState(false);
   
@@ -75,6 +76,7 @@ export default function AdminPage() {
     }
 
     setUploading(true);
+    setUploadProgress(0);
 
     for (let i = 0; i < files.length; i++) {
       try {
@@ -82,6 +84,9 @@ export default function AdminPage() {
         const newBlob = await upload(file.name, file, {
           access: 'public',
           handleUploadUrl: '/api/upload',
+          onUploadProgress: (p) => {
+            setUploadProgress(p.percentage);
+          }
         });
         
         if (newBlob.url) {
@@ -97,6 +102,7 @@ export default function AdminPage() {
     }
     
     setUploading(false);
+    setUploadProgress(0);
   };
 
   const handleBannerFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,10 +110,14 @@ export default function AdminPage() {
     if (!file) return;
 
     setUploading(true);
+    setUploadProgress(0);
     try {
       const newBlob = await upload(file.name, file, {
         access: 'public',
         handleUploadUrl: '/api/upload',
+        onUploadProgress: (p) => {
+          setUploadProgress(p.percentage);
+        }
       });
 
       if (newBlob.url) {
@@ -118,6 +128,7 @@ export default function AdminPage() {
       alert(`배너 업로드 실패: ${error.message || '파일 업로드 중 오류가 발생했습니다.'}`);
     }
     setUploading(false);
+    setUploadProgress(0);
   };
 
   const fetchData = async () => {
@@ -460,9 +471,21 @@ export default function AdminPage() {
                     onChange={(e) => setNewBanner({...newBanner, subtitle: e.target.value})}
                   />
                 </div>
-                <div className={styles.formGroup}>
-                  <label>배너 이미지 {uploading && <span style={{ fontSize: '12px', color: '#003366' }}>(업로드 중...)</span>}</label>
+                 <div className={styles.formGroup}>
+                  <label>
+                    배너 이미지 
+                    {uploading && (
+                      <span style={{ fontSize: '12px', color: '#003366', marginLeft: '8px' }}>
+                        (전송 중: {uploadProgress}%)
+                      </span>
+                    )}
+                  </label>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {uploading && (
+                      <div style={{ width: '100%', height: '4px', background: '#eee', borderRadius: '2px', overflow: 'hidden' }}>
+                        <div style={{ width: `${uploadProgress}%`, height: '100%', background: '#003366', transition: 'width 0.3s' }} />
+                      </div>
+                    )}
                     <input 
                       type="file" 
                       accept="image/*"
@@ -530,9 +553,21 @@ export default function AdminPage() {
                     required
                   />
                 </div>
-                <div className={styles.formGroup}>
-                  <label>이미지 첨부 (최대 10장) {uploading && <span style={{ fontSize: '12px', color: '#003366' }}>(업로드 중...)</span>}</label>
+                 <div className={styles.formGroup}>
+                  <label>
+                    이미지 첨부 (최대 10장) 
+                    {uploading && (
+                      <span style={{ fontSize: '12px', color: '#003366', marginLeft: '8px' }}>
+                        (전송 중: {uploadProgress}%)
+                      </span>
+                    )}
+                  </label>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {uploading && (
+                      <div style={{ width: '100%', height: '4px', background: '#eee', borderRadius: '2px', overflow: 'hidden' }}>
+                        <div style={{ width: `${uploadProgress}%`, height: '100%', background: '#003366', transition: 'width 0.3s' }} />
+                      </div>
+                    )}
                     <input 
                       type="file" 
                       accept="image/*"
