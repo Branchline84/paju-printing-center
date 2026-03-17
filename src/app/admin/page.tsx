@@ -157,11 +157,15 @@ export default function AdminPage() {
       console.log(`[Direct Upload] Banner Success: ${newBlob.url}`);
 
       if (newBlob.url) {
+        console.log('[Direct Upload] Received URL from server:', newBlob.url);
         setNewBanner(prev => {
-          console.log('[State] Updating newBanner with imageUrl:', newBlob.url);
-          return { ...prev, imageUrl: newBlob.url };
+          const updated = { ...prev, imageUrl: newBlob.url };
+          console.log('[State Update] newBanner.imageUrl set to:', updated.imageUrl);
+          return updated;
         });
         setUploadProgress(100);
+        // 사용자에게 상태 확인을 위해 안내 (나중에 제거 가능)
+        console.log('✅ 업로드 완료! 미리보기가 생성될 때까지 잠시 기다려주세요.');
       }
     } catch (error: any) {
       console.error('[Direct Upload] Banner Failed:', error);
