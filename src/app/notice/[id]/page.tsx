@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import styles from '../NoticeDetail.module.css';
-import { getYouTubeEmbedUrl } from '@/lib/utils';
+import { getYouTubeEmbedUrl, getProxyUrl } from '@/lib/utils';
 
 export default function NoticeDetailPage() {
   const { id } = useParams();
@@ -71,7 +71,7 @@ export default function NoticeDetailPage() {
                 {images.map((url: string, idx: number) => (
                   <div key={idx} className={styles.slide}>
                     <img 
-                      src={url} 
+                      src={getProxyUrl(url)} 
                       alt={`image-${idx}`} 
                       onLoad={(e) => {
                         const img = e.target as HTMLImageElement;

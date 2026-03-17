@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Banner.module.css';
 import BannerDashboard from './BannerDashboard';
+import { getProxyUrl } from '@/lib/utils';
 
 const DEFAULT_BANNERS = [
   { 
@@ -41,7 +42,7 @@ export default function Banner() {
               id: b.id,
               title: b.title,
               subtitle: b.subtitle,
-              image: b.imageUrl || "/banner_printing_office.png"
+              image: getProxyUrl(b.imageUrl) || "/banner_printing_office.png"
             })));
           }
         }

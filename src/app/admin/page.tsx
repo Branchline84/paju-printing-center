@@ -5,8 +5,9 @@ import { upload } from '@vercel/blob/client';
 import { v4 as uuidv4 } from 'uuid';
 import Header from '@/components/Header';
 import { useRouter } from 'next/navigation';
+import { logoutAdmin } from '@/lib/auth';
+import { getYouTubeEmbedUrl, getProxyUrl } from '@/lib/utils';
 import styles from './Admin.module.css';
-import { getYouTubeEmbedUrl } from '@/lib/utils';
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<'posts' | 'members' | 'inquiries' | 'banners'>('posts');
@@ -391,7 +392,7 @@ export default function AdminPage() {
                     {activeTab === 'banners' && (
                       <td>
                         <div style={{ width: '100px', height: '50px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #eee' }}>
-                          <img src={item.imageUrl} alt="banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <img src={getProxyUrl(item.imageUrl)} alt="banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         </div>
                       </td>
                     )}
@@ -541,7 +542,7 @@ export default function AdminPage() {
                     />
                     {newBanner.imageUrl && (
                       <div style={{ width: '100%', height: '150px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd' }}>
-                        <img src={newBanner.imageUrl} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={getProxyUrl(newBanner.imageUrl)} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                     )}
                   </div>
@@ -630,7 +631,7 @@ export default function AdminPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
                       {newPost.imageUrls.map((url, idx) => (
                         <div key={idx} style={{ position: 'relative', height: '60px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #ddd' }}>
-                          <img src={url} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <img src={getProxyUrl(url)} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           <button 
                             type="button"
                             onClick={() => setNewPost({ ...newPost, imageUrls: newPost.imageUrls.filter((_, i) => i !== idx) })}
@@ -697,7 +698,7 @@ export default function AdminPage() {
                     const urls = JSON.parse(selectedPost.imageUrls);
                     return Array.isArray(urls) ? urls.map((url, idx) => (
                       <div key={idx} style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid #eee' }}>
-                        <img src={url} alt={`preview-${idx}`} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
+                        <img src={getProxyUrl(url)} alt={`preview-${idx}`} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
                       </div>
                     )) : null;
                   } catch (e) { return null; }

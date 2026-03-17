@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import styles from './Notice.module.css';
 import Link from 'next/link';
-import { getYouTubeThumbnailUrl } from '@/lib/utils';
+import { getYouTubeThumbnailUrl, getProxyUrl } from '@/lib/utils';
 
 interface Post {
   id: number;
@@ -94,7 +94,7 @@ export default function Notice() {
                         background: (() => {
                           try {
                             const urls = JSON.parse(item.imageUrls || '[]');
-                            if (urls.length > 0) return `url(${urls[0]}) center/cover no-repeat`;
+                            if (urls.length > 0) return `url(${getProxyUrl(urls[0])}) center/cover no-repeat`;
                             
                             if (item.videoUrl) {
                               const thumb = getYouTubeThumbnailUrl(item.videoUrl);

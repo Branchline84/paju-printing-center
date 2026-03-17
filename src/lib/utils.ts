@@ -64,3 +64,14 @@ export function getYouTubeThumbnailUrl(url: string): string {
 
   return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
 }
+
+/**
+ * Wraps Vercel Blob URLs with a proxy to bypass private access restrictions.
+ */
+export function getProxyUrl(url: string | null | undefined): string {
+  if (!url) return '';
+  if (url.includes('vercel-storage.com')) {
+    return `/api/proxy-image?url=${encodeURIComponent(url)}`;
+  }
+  return url;
+}
