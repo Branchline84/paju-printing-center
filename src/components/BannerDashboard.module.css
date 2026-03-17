@@ -262,15 +262,31 @@
 
 @media (max-width: 768px) {
   .dashboard {
-    background: transparent; /* Keep glass look */
+    background: transparent;
     padding: 0 20px 40px;
+    gap: 12px;
   }
   .card {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: #003366; /* Solid Navy */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  .cardHeader { 
+    color: #ffd700; /* Gold for noticeability */
+    opacity: 1; 
+    font-weight: 800;
+  }
+  .cardTitle {
     color: #fff;
   }
-  .cardHeader { color: #fff; opacity: 0.9; }
-  .cardDesc { color: rgba(255, 255, 255, 0.8); }
+  .cardDesc { 
+    color: #e0e0e0; 
+    opacity: 1;
+  }
   .temp { color: #fff; }
+  .newsItem { color: #fff; }
 }
