@@ -13,8 +13,8 @@ export async function middleware(request: NextRequest) {
 
   // 1. Protect Admin UI Routes
   if (pathname.startsWith('/admin')) {
-    // Skip login page itself
-    if (pathname === '/admin/login') {
+    // Skip login page itself (normalized check)
+    if (pathname === '/admin/login' || pathname === '/admin/login/') {
       return NextResponse.next();
     }
 

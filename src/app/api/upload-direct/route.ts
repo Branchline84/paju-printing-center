@@ -27,10 +27,10 @@ export async function POST(request: Request): Promise<NextResponse> {
       access: 'private',
     });
 
-    console.log('[Direct Upload] SUCCESS:', blob.url);
-    return NextResponse.json(blob);
+    console.log('[Direct Upload] SUCCESS URL:', blob.url);
+    return NextResponse.json({ ...blob, success: true });
   } catch (error: any) {
-    console.error('[Direct Upload] Error:', error.message);
+    console.error('[Direct Upload] Critical Error:', error.message);
     return NextResponse.json(
       { error: `서버 업로드 오류: ${error.message}` },
       { status: 500 }
