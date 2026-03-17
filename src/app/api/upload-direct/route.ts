@@ -22,9 +22,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     const safeFileName = `direct-${uuidv4()}.${extension}`;
 
     // Vercel Blob으로 직접 업로드
-    // 주의: 서버 사이드 put은 Vercel Hobby 플랜 기준 4.5MB 제한이 있을 수 있음
+    // 스토리지 설정이 Private이므로 access: 'private'으로 맞춰줍니다.
     const blob = await put(safeFileName, file, {
-      access: 'public',
+      access: 'private',
     });
 
     console.log('[Direct Upload] SUCCESS:', blob.url);
