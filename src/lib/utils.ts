@@ -75,3 +75,30 @@ export function getProxyUrl(url: string | null | undefined): string {
   }
   return url;
 }
+
+/**
+ * Basic Markdown to HTML converter for post content.
+ * Supports Bold, Italic, and Lists.
+ */
+export function renderMarkdown(content: string | null | undefined): string {
+  if (!content) return '';
+  
+  return content
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/^- (.*$)/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>') // Simple list wrap
+    .replace(/(<\/ul>\s*<ul>)/g, '')            // Merge adjacent lists
+    .replace(/\n/g, '<br />');
+}
+
+/**
+ * Strips basic Markdown tags for summary/excerpt views.
+ */
+export function stripMarkdown(content: string | null | undefined): string {
+  if (!content) return '';
+  return content
+    .replace(/\*\*/g, '')
+    .replace(/\*/g, '')
+    .replace(/^- /gm, '');
+}

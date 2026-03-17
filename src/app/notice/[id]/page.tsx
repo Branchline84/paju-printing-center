@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import styles from '../NoticeDetail.module.css';
-import { getYouTubeEmbedUrl, getProxyUrl } from '@/lib/utils';
+import { getYouTubeEmbedUrl, getProxyUrl, renderMarkdown } from '@/lib/utils';
 
 export default function NoticeDetailPage() {
   const { id } = useParams();
@@ -113,9 +113,10 @@ export default function NoticeDetailPage() {
             </div>
           )}
 
-          <div className={styles.content}>
-            {post.content}
-          </div>
+          <div 
+            className={styles.content}
+            dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }}
+          />
 
           {post.videoUrl && (
             <div className={styles.videoContainer}>

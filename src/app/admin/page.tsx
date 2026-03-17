@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Header from '@/components/Header';
 import { useRouter } from 'next/navigation';
 import { logoutAdmin } from '@/lib/auth';
-import { getYouTubeEmbedUrl, getProxyUrl } from '@/lib/utils';
+import { getYouTubeEmbedUrl, getProxyUrl, renderMarkdown, stripMarkdown } from '@/lib/utils';
 import styles from './Admin.module.css';
 
 export default function AdminPage() {
@@ -672,11 +672,64 @@ export default function AdminPage() {
                 </div>
                 <div className={styles.formGroup}>
                   <label>내용</label>
-                  <textarea 
-                    value={newPost.content} 
-                    onChange={(e) => setNewPost({...newPost, content: e.target.value})}
-                    required
-                  />
+                  <div className={styles.editorContainer}>
+                    <div className={styles.editorToolbar}>
+                      <button 
+                        type="button" 
+                        className={styles.toolbarBtn}
+                        onClick={() => {
+                          const textarea = document.getElementById('postContent') as HTMLTextAreaElement;
+                          const start = textarea.selectionStart;
+                          const end = textarea.selectionEnd;
+                          const text = textarea.value;
+                          const selectedText = text.substring(start, end);
+                          const newText = text.substring(0, start) + `**${selectedText}**` + text.substring(end);
+                          setNewPost({ ...newPost, content: newText });
+                        }}
+                      ><b>B</b></button>
+                      <button 
+                        type="button" 
+                        className={styles.toolbarBtn}
+                        onClick={() => {
+                          const textarea = document.getElementById('postContent') as HTMLTextAreaElement;
+                          const start = textarea.selectionStart;
+                          const end = textarea.selectionEnd;
+                          const text = textarea.value;
+                          const selectedText = text.substring(start, end);
+                          const newText = text.substring(0, start) + `*${selectedText}*` + text.substring(end);
+                          setNewPost({ ...newPost, content: newText });
+                        }}
+                      ><i>I</i></button>
+                      <button 
+                        type="button" 
+                        className={styles.toolbarBtn}
+                        onClick={() => {
+                          const textarea = document.getElementById('postContent') as HTMLTextAreaElement;
+                          const start = textarea.selectionStart;
+                          const text = textarea.value;
+                          const newText = text.substring(0, start) + "\n- " + text.substring(start);
+                          setNewPost({ ...newPost, content: newText });
+                        }}
+                      >• List</button>
+                    </div>
+                    <div className={styles.editorMain}>
+                      <textarea 
+                        id="postContent"
+                        value={newPost.content} 
+                        onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+                        placeholder="내용을 입력하세요. (Markdown 지원)"
+                        required
+                      />
+                      <div className={styles.previewArea}>
+                        <span className={styles.previewLabel}>미리보기</span>
+                        <div 
+                          dangerouslySetInnerHTML={{ 
+                            __html: renderMarkdown(newPost.content)
+                          }} 
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className={styles.modalActions}>
                   <button type="button" className={styles.cancelBtn} onClick={() => {

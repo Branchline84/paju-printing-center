@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import styles from './Notice.module.css';
 import Link from 'next/link';
-import { getYouTubeThumbnailUrl, getProxyUrl } from '@/lib/utils';
+import { getYouTubeThumbnailUrl, getProxyUrl, stripMarkdown } from '@/lib/utils';
 
 interface Project {
   id: number;
@@ -97,7 +97,11 @@ export default function SupportProjects() {
                   </div>
                   <div className={styles.cardBody}>
                     <h4 className={styles.cardTitle}>{item.title}</h4>
-                    <p className={styles.cardExcerpt}>{item.content.length > 80 ? item.content.substring(0, 80) + '...' : item.content}</p>
+                    <p className={styles.cardExcerpt}>
+                      {stripMarkdown(item.content).length > 80 
+                        ? stripMarkdown(item.content).substring(0, 80) + '...' 
+                        : stripMarkdown(item.content)}
+                    </p>
                     <div className={styles.cardFooter}>
                       <span className={styles.cardDate}>{new Date(item.createdAt).toISOString().split('T')[0]}</span>
                       <span className={styles.readMore}>사업 신청하기 &rarr;</span>
