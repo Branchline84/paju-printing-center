@@ -333,15 +333,6 @@ export default function AdminPage() {
       <Header />
       <main className="container">
           <div className={styles.adminHeader}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h2 style={{ margin: 0 }}>관리자 대시보드</h2>
-              <button 
-                onClick={handleLogout}
-                style={{ 
-                  padding: '8px 16px', 
-                  borderRadius: '8px', 
-                  border: '1px solid #d2d2d7', 
-                  background: '#fff',
                   fontSize: '13px',
                   fontWeight: 600,
                   cursor: 'pointer',
