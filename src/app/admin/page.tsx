@@ -668,8 +668,8 @@ export default function AdminPage() {
                   <button 
                     type="submit" 
                     className={styles.submitBtn} 
-                    disabled={uploading}
-                    style={{ opacity: uploading ? 0.7 : 1, cursor: uploading ? 'not-allowed' : 'pointer' }}
+                    disabled={uploading || !newPost.imageUrls.length}
+                    style={{ opacity: (uploading || !newPost.imageUrls.length) ? 0.7 : 1, cursor: (uploading || !newPost.imageUrls.length) ? 'not-allowed' : 'pointer' }}
                   >
                     {uploading ? '사진 업로드 중...' : (editingId ? '수정 완료' : '등록하기')}
                   </button>
