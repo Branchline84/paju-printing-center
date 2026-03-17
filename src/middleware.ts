@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/request';
+import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
 export const runtime = 'nodejs';
@@ -69,5 +69,11 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/:path*'],
+  matcher: [
+    '/admin/:path*',
+    '/api/posts/:path*',
+    '/api/banners/:path*',
+    '/api/members/:path*',
+    '/api/inquiries/:path*',
+  ],
 };

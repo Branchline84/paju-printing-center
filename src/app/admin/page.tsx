@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { upload } from '@vercel/blob/client';
+import { v4 as uuidv4 } from 'uuid';
 import Header from '@/components/Header';
 import { useRouter } from 'next/navigation';
 import styles from './Admin.module.css';
@@ -15,6 +16,8 @@ export default function AdminPage() {
   const [selectedPost, setSelectedPost] = useState<any>(null); // For viewing content
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [isAuth, setIsAuth] = useState(false);
   
@@ -81,13 +84,30 @@ export default function AdminPage() {
     for (let i = 0; i < files.length; i++) {
       try {
         const file = files[i];
-        const newBlob = await upload(file.name, file, {
-          access: 'public',
-          handleUploadUrl: '/api/upload',
-          onUploadProgress: (p) => {
-            setUploadProgress(p.percentage);
-          }
+        
+        // Vercel Serverless Function 4.5MB 제한 체크
+        if (file.size > 4.5 * 1024 * 1024) {
+          alert(`파일이 너무 큽니다: ${file.name} (최대 4.5MB)\n용량을 줄여서 다시 시도해주세요.`);
+          continue;
+        }
+
+        console.log(`[Direct Upload] Starting post image upload: ${file.name}`);
+        
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('/api/upload-direct', {
+          method: 'POST',
+          body: formData,
         });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || '업로드 중 오류가 발생했습니다.');
+        }
+
+        const newBlob = await response.json();
+        console.log(`[Direct Upload] Success: ${newBlob.url}`);
         
         if (newBlob.url) {
           setNewPost(prev => ({
@@ -96,13 +116,14 @@ export default function AdminPage() {
           }));
         }
       } catch (error: any) {
-        console.error('Upload failed', error);
-        alert(`업로드 실패: ${error.message || '파일 업로드 중 오류가 발생했습니다.'}`);
+        console.error('[Direct Upload] Failed to upload post image', error);
+        alert(`업로드 실패 (${files[i].name}): ${error.message}`);
       }
     }
     
     setUploading(false);
     setUploadProgress(0);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleBannerFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,23 +133,44 @@ export default function AdminPage() {
     setUploading(true);
     setUploadProgress(0);
     try {
-      const newBlob = await upload(file.name, file, {
-        access: 'public',
-        handleUploadUrl: '/api/upload',
-        onUploadProgress: (p) => {
-          setUploadProgress(p.percentage);
-        }
+      // Vercel Serverless Function 4.5MB 제한 체크
+      if (file.size > 4.5 * 1024 * 1024) {
+        throw new Error('파일이 너무 큽니다. (최대 4.5MB)');
+      }
+
+      console.log(`[Direct Upload] Starting banner upload: ${file.name}`);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload-direct', {
+        method: 'POST',
+        body: formData,
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '업로드 중 오류가 발생했습니다.');
+      }
+
+      const newBlob = await response.json();
+      console.log(`[Direct Upload] Banner Success: ${newBlob.url}`);
+
       if (newBlob.url) {
-        setNewBanner(prev => ({ ...prev, imageUrl: newBlob.url }));
+        setNewBanner(prev => {
+          console.log('[State] Updating newBanner with imageUrl:', newBlob.url);
+          return { ...prev, imageUrl: newBlob.url };
+        });
+        setUploadProgress(100);
       }
     } catch (error: any) {
-      console.error('Upload failed', error);
-      alert(`배너 업로드 실패: ${error.message || '파일 업로드 중 오류가 발생했습니다.'}`);
+      console.error('[Direct Upload] Banner Failed:', error);
+      alert(`배너 업로드 실패: ${error.message}`);
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
+      if (bannerInputRef.current) bannerInputRef.current.value = '';
     }
-    setUploading(false);
-    setUploadProgress(0);
   };
 
   const fetchData = async () => {
@@ -199,6 +241,7 @@ export default function AdminPage() {
         setIsModalOpen(false);
         setEditingId(null);
         setNewBanner({ title: '', subtitle: '', imageUrl: '', order: 0, isActive: true });
+        if (bannerInputRef.current) bannerInputRef.current.value = '';
         fetchData();
         alert(editingId ? '배너가 수정되었습니다.' : '배너가 등록되었습니다.');
       }
@@ -490,6 +533,7 @@ export default function AdminPage() {
                       type="file" 
                       accept="image/*"
                       onChange={handleBannerFileUpload}
+                      ref={bannerInputRef}
                     />
                     {newBanner.imageUrl && (
                       <div style={{ width: '100%', height: '150px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd' }}>
@@ -524,8 +568,11 @@ export default function AdminPage() {
                   <button 
                     type="submit" 
                     className={styles.submitBtn} 
-                    disabled={uploading}
-                    style={{ opacity: uploading ? 0.7 : 1, cursor: uploading ? 'not-allowed' : 'pointer' }}
+                    disabled={uploading || !newBanner.imageUrl}
+                    style={{ 
+                      opacity: (uploading || !newBanner.imageUrl) ? 0.7 : 1, 
+                      cursor: (uploading || !newBanner.imageUrl) ? 'not-allowed' : 'pointer' 
+                    }}
                   >
                     {uploading ? '업로드 중...' : (editingId ? '수정 완료' : '등록하기')}
                   </button>
@@ -574,6 +621,7 @@ export default function AdminPage() {
                       multiple
                       onChange={handleFileUpload}
                       disabled={newPost.imageUrls.length >= 10}
+                      ref={fileInputRef}
                     />
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
                       {newPost.imageUrls.map((url, idx) => (
