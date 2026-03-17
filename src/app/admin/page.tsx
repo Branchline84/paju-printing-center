@@ -45,6 +45,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     const checkAuth = async () => {
+      console.log('ADMIN_VERSION_1.1_LOADED');
       try {
         const res = await fetch('/api/members'); // Protected API
         if (res.ok) {
@@ -332,23 +333,18 @@ export default function AdminPage() {
     <div className={styles.adminPage}>
       <Header />
       <main className="container">
-          <div className={styles.adminHeader}>
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  color: '#ff3b30'
-                }}
-              >
-                🔒 로그아웃
-              </button>
-            </div>
-            <div className={styles.adminTabs}>
-              <button className={activeTab === 'posts' ? styles.active : ''} onClick={() => setActiveTab('posts')}>게시물 관리</button>
-              <button className={activeTab === 'banners' ? styles.active : ''} onClick={() => setActiveTab('banners')}>배너 관리</button>
-              <button className={activeTab === 'members' ? styles.active : ''} onClick={() => setActiveTab('members')}>회원 가입</button>
-              <button className={activeTab === 'inquiries' ? styles.active : ''} onClick={() => setActiveTab('inquiries')}>문의 내역</button>
-            </div>
+        <div className={styles.adminHeader}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h2 style={{ margin: 0 }}>관리자 대시보드 v1.1</h2>
+            <button onClick={logoutAdmin} className={styles.cancelBtn}>로그아웃</button>
           </div>
+          <div className={styles.adminTabs}>
+            <button className={activeTab === 'posts' ? styles.active : ''} onClick={() => setActiveTab('posts')}>게시물 관리</button>
+            <button className={activeTab === 'banners' ? styles.active : ''} onClick={() => setActiveTab('banners')}>배너 관리</button>
+            <button className={activeTab === 'members' ? styles.active : ''} onClick={() => setActiveTab('members')}>회원 가입</button>
+            <button className={activeTab === 'inquiries' ? styles.active : ''} onClick={() => setActiveTab('inquiries')}>문의 내역</button>
+          </div>
+        </div>
 
         <div className={styles.actionRow}>
           <h3>{activeTab === 'posts' ? '전체 게시물' : activeTab === 'banners' ? '배너 목록' : activeTab === 'members' ? '회원 목록' : '문의 접수 내역'}</h3>
