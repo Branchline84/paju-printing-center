@@ -69,11 +69,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/admin/:path*',
-    '/api/posts/:path*',
-    '/api/banners/:path*',
-    '/api/members/:path*',
-    '/api/inquiries/:path*',
-  ],
+  matcher: ['/admin/:path*', '/api/:path*'],
 };
