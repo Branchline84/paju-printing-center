@@ -219,15 +219,22 @@ export default function AdminPage() {
 
   const handleDeletePost = async (id: number) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
+    
+    // Optimistic Update: Remove from UI immediately
+    const previousData = [...data];
+    setData(prev => prev.filter(item => item.id !== id));
+
     try {
       const url = activeTab === 'banners' ? `/api/banners/${id}` : `/api/posts/${id}`;
       const res = await fetch(url, { method: 'DELETE' });
-      if (res.ok) {
-        fetchData();
-        alert('삭제되었습니다.');
+      if (!res.ok) {
+        throw new Error('Delete failed');
       }
+      // alert('삭제되었습니다.'); // Removed alert for smoother UX, or can keep it
     } catch (error) {
       console.error('Delete failed', error);
+      alert('삭제에 실패했습니다. 다시 시도해주세요.');
+      setData(previousData); // Rollback
     }
   };
 
@@ -279,33 +286,43 @@ export default function AdminPage() {
   };
 
   const handleApprove = async (id: number) => {
+    // Optimistic Update: Mark as approved in UI immediately
+    const previousData = [...data];
+    setData(prev => prev.map(item => item.id === id ? { ...item, approved: true } : item));
+
     try {
       const res = await fetch('/api/members', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, approved: true })
       });
-      if (res.ok) {
-        fetchData();
-        alert('회원 가입이 승인되었습니다.');
+      if (!res.ok) {
+        throw new Error('Approval failed');
       }
     } catch (error) {
       console.error('Approval failed', error);
+      alert('승인에 실패했습니다.');
+      setData(previousData); // Rollback
     }
   };
 
   const handleResolve = async (id: number, status: string) => {
+    // Optimistic Update
+    const previousData = [...data];
+    setData(prev => prev.map(item => item.id === id ? { ...item, status } : item));
+
     try {
       const res = await fetch('/api/inquiries', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, status })
       });
-      if (res.ok) {
-        fetchData();
+      if (!res.ok) {
+        throw new Error('Resolve failed');
       }
     } catch (error) {
       console.error('Resolve failed', error);
+      setData(previousData); // Rollback
     }
   };
 

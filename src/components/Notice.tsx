@@ -77,7 +77,17 @@ export default function Notice() {
 
         <div className={styles.cardGrid}>
           {loading ? (
-            <div className={styles.emptyState}>데이터를 불러오는 중입니다...</div>
+            Array(6).fill(0).map((_, i) => (
+              <div key={i} className={styles.cardItem}>
+                <div className={`${styles.skeleton} ${styles.skeletonImage}`} />
+                <div className={styles.cardBody}>
+                  <div className={`${styles.skeleton} ${styles.skeletonTitle}`} />
+                  <div className={`${styles.skeleton} ${styles.skeletonText}`} />
+                  <div className={`${styles.skeleton} ${styles.skeletonText}`} style={{ width: '60%' }} />
+                  <div className={`${styles.skeleton} ${styles.skeletonFooter}`} />
+                </div>
+              </div>
+            ))
           ) : posts.length > 0 ? (
             posts.map((item, index) => (
               <div key={item.id} className={styles.cardItem} style={{ animationDelay: `${index * 0.1}s` }}>

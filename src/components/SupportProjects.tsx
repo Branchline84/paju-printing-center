@@ -47,7 +47,16 @@ export default function SupportProjects() {
 
         <div className={styles.cardGrid}>
           {loading ? (
-            <div className={styles.emptyState}>지원사업을 불러오는 중입니다...</div>
+            Array(3).fill(0).map((_, i) => (
+              <div key={i} className={styles.cardItem}>
+                <div className={`${styles.skeleton} ${styles.skeletonImage}`} />
+                <div className={styles.cardBody}>
+                  <div className={`${styles.skeleton} ${styles.skeletonTitle}`} />
+                  <div className={`${styles.skeleton} ${styles.skeletonText}`} />
+                  <div className={`${styles.skeleton} ${styles.skeletonFooter}`} />
+                </div>
+              </div>
+            ))
           ) : projects.length > 0 ? (
             projects.map((item) => (
               <div key={item.id} className={styles.cardItem}>

@@ -71,10 +71,14 @@ export default function Banner() {
 
   return (
     <section className={styles.banner}>
-      <img 
+      <Image 
         src={currentBanner.image} 
         alt="Background" 
         className={styles.bannerImg}
+        fill
+        priority
+        sizes="100vw"
+        style={{ objectFit: 'cover' }}
         key={currentBanner.image} 
       />
       
