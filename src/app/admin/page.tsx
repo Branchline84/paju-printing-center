@@ -202,7 +202,7 @@ export default function AdminPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...newPost,
-          imageUrls: JSON.stringify(newPost.imageUrls)
+          imageUrls: newPost.imageUrls
         })
       });
       if (res.ok) {

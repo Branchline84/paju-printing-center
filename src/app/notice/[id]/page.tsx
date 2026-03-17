@@ -32,7 +32,16 @@ export default function NoticeDetailPage() {
   if (loading) return <div className={styles.loading}>정보를 불러오는 중입니다...</div>;
   if (!post) return <div className={styles.loading}>게시물을 찾을 수 없습니다.</div>;
 
-  const images = post.imageUrls ? JSON.parse(post.imageUrls) : [];
+  let images: string[] = [];
+  try {
+    if (post.imageUrls) {
+      const parsed = typeof post.imageUrls === 'string' ? JSON.parse(post.imageUrls) : post.imageUrls;
+      images = Array.isArray(parsed) ? parsed : (typeof parsed === 'string' ? JSON.parse(parsed) : []);
+    }
+  } catch (e) {
+    console.error('Failed to parse imageUrls:', e);
+    images = [];
+  }
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev === images.length - 1 ? 0 : prev + 1));
