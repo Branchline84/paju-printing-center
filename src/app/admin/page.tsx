@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './Admin.module.css';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import BackgroundDecor from '../components/BackgroundDecor';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import BackgroundDecor from '../../components/BackgroundDecor';
 import { useRouter } from 'next/navigation';
 
 export default function AdminPage() {

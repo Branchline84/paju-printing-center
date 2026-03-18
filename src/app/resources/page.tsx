@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import BackgroundDecor from '../components/BackgroundDecor';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import BackgroundDecor from '../../components/BackgroundDecor';
 import styles from './Resources.module.css';
 
 export default function ResourcesPage() {
