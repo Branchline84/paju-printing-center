@@ -2,12 +2,16 @@
   padding-bottom: 100px;
   background: #fbfbfd;
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
 
 .adminHeader {
   padding: 60px 0 40px;
-  border-bottom: 1px solid #e5e5e7;
+  border-bottom: 1px solid rgba(229, 229, 231, 0.5);
   margin-bottom: 40px;
+  position: relative;
+  z-index: 10;
 }
 
 .adminHeader h2 {
@@ -63,11 +67,15 @@
 }
 
 .contentTable {
-  background: #fff;
-  border-radius: 12px;
-  border: 1px solid #e5e5e7;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+  position: relative;
+  z-index: 5;
 }
 
 .adminTable {
@@ -76,17 +84,20 @@
 }
 
 .adminTable th {
-  background: #fbfbfd;
-  padding: 16px 20px;
+  background: rgba(251, 251, 253, 0.5);
+  padding: 20px;
   text-align: left;
   font-size: 13px;
   color: #86868b;
-  border-bottom: 1px solid #e5e5e7;
+  border-bottom: 1px solid rgba(229, 229, 231, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
 }
 
 .adminTable td {
-  padding: 16px 20px;
-  border-bottom: 1px solid #f2f2f2;
+  padding: 20px;
+  border-bottom: 1px solid rgba(242, 242, 242, 0.5);
   font-size: 14px;
   color: #1d1d1f;
 }
@@ -107,12 +118,15 @@
 }
 
 .modalContent {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
   padding: 40px;
-  border-radius: 20px;
+  border-radius: 28px;
   width: 100%;
-  max-width: 600px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  max-width: 700px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .modalContent h3 {
@@ -257,17 +271,22 @@
   background: #fff;
   border: 1px solid #d2d2d7;
   border-radius: 6px;
-  padding: 4px 10px;
+  padding: 6px 12px;
   font-size: 13px;
   font-weight: 600;
   color: #1d1d1f;
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .toolbarBtn:hover {
-  background: #e8e8ed;
+  background: #f5f5f7;
   border-color: #86868b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .editorMain {
@@ -300,6 +319,21 @@
 .previewArea strong {
   font-weight: 700;
   color: #000;
+}
+
+.previewArea h3 {
+  margin: 16px 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.previewArea blockquote {
+  margin: 12px 0;
+  padding: 8px 16px;
+  border-left: 4px solid #d2d2d7;
+  background: #f5f5f7;
+  color: #424245;
+  font-style: italic;
 }
 
 .previewArea ul {

@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { upload } from '@vercel/blob/client';
 import { v4 as uuidv4 } from 'uuid';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import BackgroundDecor from '@/components/BackgroundDecor';
 import { useRouter } from 'next/navigation';
 import { logoutAdmin } from '@/lib/auth';
 import { getYouTubeEmbedUrl, getProxyUrl, renderMarkdown, stripMarkdown } from '@/lib/utils';
@@ -19,6 +21,7 @@ export default function AdminPage() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
   const [isAuth, setIsAuth] = useState(false);
   
@@ -192,6 +195,63 @@ export default function AdminPage() {
     setLoading(false);
   };
 
+  const insertFormatting = (type: 'bold' | 'italic' | 'list' | 'header' | 'quote' | 'link') => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    const selectedText = text.substring(start, end);
+    
+    let newText = '';
+    let cursorOffset = 0;
+
+    switch (type) {
+      case 'bold':
+        newText = text.substring(0, start) + `**${selectedText || '텍스트'}**` + text.substring(end);
+        cursorOffset = selectedText ? end + 4 : start + 2;
+        break;
+      case 'italic':
+        newText = text.substring(0, start) + `*${selectedText || '텍스트'}*` + text.substring(end);
+        cursorOffset = selectedText ? end + 2 : start + 1;
+        break;
+      case 'header':
+        newText = text.substring(0, start) + `\n### ${selectedText || '제목'}` + text.substring(end);
+        cursorOffset = selectedText ? end + 5 : start + 5;
+        break;
+      case 'quote':
+        newText = text.substring(0, start) + `\n> ${selectedText || '인용구'}` + text.substring(end);
+        cursorOffset = selectedText ? end + 3 : start + 3;
+        break;
+      case 'list':
+        newText = text.substring(0, start) + `\n- ${selectedText || '목록'}` + text.substring(end);
+        cursorOffset = selectedText ? end + 3 : start + 3;
+        break;
+      case 'link':
+        newText = text.substring(0, start) + `[${selectedText || '링크텍스트'}](https://)` + text.substring(end);
+        cursorOffset = selectedText ? start + selectedText.length + 3 : start + 7;
+        break;
+    }
+
+    setNewPost({ ...newPost, content: newText });
+    
+    // Focus back and set selection
+    setTimeout(() => {
+      textarea.focus();
+      if (!selectedText) {
+        if (type === 'bold') textarea.setSelectionRange(start + 2, start + 5);
+        else if (type === 'italic') textarea.setSelectionRange(start + 1, start + 4);
+        else if (type === 'header') textarea.setSelectionRange(start + 5, start + 7);
+        else if (type === 'quote') textarea.setSelectionRange(start + 3, start + 6);
+        else if (type === 'list') textarea.setSelectionRange(start + 3, start + 5);
+        else if (type === 'link') textarea.setSelectionRange(start + 1, start + 6);
+      } else {
+        textarea.setSelectionRange(cursorOffset, cursorOffset);
+      }
+    }, 0);
+  };
+
   const handleSubmitPost = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -331,11 +391,12 @@ export default function AdminPage() {
 
   return (
     <div className={styles.adminPage}>
+      <BackgroundDecor />
       <Header />
       <main className="container">
         <div className={styles.adminHeader}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <h2 style={{ margin: 0 }}>관리자 대시보드 v1.1</h2>
+            <h2 style={{ margin: 0 }}>관리자 대시보드 v1.2</h2>
             <button onClick={logoutAdmin} className={styles.cancelBtn}>로그아웃</button>
           </div>
           <div className={styles.adminTabs}>
@@ -661,47 +722,35 @@ export default function AdminPage() {
                   <label>내용</label>
                   <div className={styles.editorContainer}>
                     <div className={styles.editorToolbar}>
-                      <button 
-                        type="button" 
-                        className={styles.toolbarBtn}
-                        onClick={() => {
-                          const textarea = document.getElementById('postContent') as HTMLTextAreaElement;
-                          const start = textarea.selectionStart;
-                          const end = textarea.selectionEnd;
-                          const text = textarea.value;
-                          const selectedText = text.substring(start, end);
-                          const newText = text.substring(0, start) + `**${selectedText}**` + text.substring(end);
-                          setNewPost({ ...newPost, content: newText });
-                        }}
-                      ><b>B</b></button>
-                      <button 
-                        type="button" 
-                        className={styles.toolbarBtn}
-                        onClick={() => {
-                          const textarea = document.getElementById('postContent') as HTMLTextAreaElement;
-                          const start = textarea.selectionStart;
-                          const end = textarea.selectionEnd;
-                          const text = textarea.value;
-                          const selectedText = text.substring(start, end);
-                          const newText = text.substring(0, start) + `*${selectedText}*` + text.substring(end);
-                          setNewPost({ ...newPost, content: newText });
-                        }}
-                      ><i>I</i></button>
-                      <button 
-                        type="button" 
-                        className={styles.toolbarBtn}
-                        onClick={() => {
-                          const textarea = document.getElementById('postContent') as HTMLTextAreaElement;
-                          const start = textarea.selectionStart;
-                          const text = textarea.value;
-                          const newText = text.substring(0, start) + "\n- " + text.substring(start);
-                          setNewPost({ ...newPost, content: newText });
-                        }}
-                      >• List</button>
+                      <button type="button" className={styles.toolbarBtn} onClick={() => insertFormatting('header')}>
+                        <svg className={styles.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 12h16M4 18V6M20 18V6" strokeWidth="2" strokeLinecap="round"/></svg>
+                        제목
+                      </button>
+                      <button type="button" className={styles.toolbarBtn} onClick={() => insertFormatting('bold')}>
+                        <svg className={styles.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6zM6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        <b>Bold</b>
+                      </button>
+                      <button type="button" className={styles.toolbarBtn} onClick={() => insertFormatting('italic')}>
+                        <svg className={styles.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 4h-9M14 20H5M15 4L9 20" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        <i>Italic</i>
+                      </button>
+                      <button type="button" className={styles.toolbarBtn} onClick={() => insertFormatting('list')}>
+                        <svg className={styles.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        목록
+                      </button>
+                      <button type="button" className={styles.toolbarBtn} onClick={() => insertFormatting('quote')}>
+                        <svg className={styles.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1 0 2.5 0 5-2 7zm12 0c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1 0 2.5 0 5-2 7z" fill="currentColor" stroke="none"/></svg>
+                        인용
+                      </button>
+                      <button type="button" className={styles.toolbarBtn} onClick={() => insertFormatting('link')}>
+                        <svg className={styles.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        링크
+                      </button>
                     </div>
                     <div className={styles.editorMain}>
                       <textarea 
                         id="postContent"
+                        ref={textareaRef}
                         value={newPost.content} 
                         onChange={(e) => setNewPost({...newPost, content: e.target.value})}
                         placeholder="내용을 입력하세요. (Markdown 지원)"
@@ -784,6 +833,7 @@ export default function AdminPage() {
           </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 }

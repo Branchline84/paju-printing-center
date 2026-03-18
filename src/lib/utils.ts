@@ -84,11 +84,14 @@ export function renderMarkdown(content: string | null | undefined): string {
   if (!content) return '';
   
   return content
+    .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+    .replace(/^> (.*$)/gm, '<blockquote>$1</blockquote>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
     .replace(/^- (.*$)/gm, '<li>$1</li>')
     .replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>') // Simple list wrap
     .replace(/(<\/ul>\s*<ul>)/g, '')            // Merge adjacent lists
+    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: #003366; text-decoration: underline;">$1</a>')
     .replace(/\n/g, '<br />');
 }
 

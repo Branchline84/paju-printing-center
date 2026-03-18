@@ -165,7 +165,32 @@
   font-size: 18px;
   line-height: 1.8;
   color: #1d1d1f;
-  white-space: pre-wrap;
+}
+
+.content h3 {
+  margin: 24px 0 12px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #003366;
+}
+
+.content blockquote {
+  margin: 20px 0;
+  padding: 12px 24px;
+  border-left: 4px solid #003366;
+  background: #f8f9fa;
+  color: #495057;
+  font-style: italic;
+  border-radius: 0 8px 8px 0;
+}
+
+.content ul {
+  padding-left: 24px;
+  margin: 16px 0;
+}
+
+.content li {
+  margin-bottom: 8px;
 }
 
 .videoContainer {
