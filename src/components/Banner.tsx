@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from './Banner.module.css';
+import Image from 'next/image';
 import BannerDashboard from './BannerDashboard';
 import { getProxyUrl } from '@/lib/utils';
 

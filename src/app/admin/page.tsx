@@ -7,7 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BackgroundDecor from '@/components/BackgroundDecor';
 import { useRouter } from 'next/navigation';
-import { logoutAdmin } from '@/lib/auth';
+
 import { getYouTubeEmbedUrl, getProxyUrl, renderMarkdown, stripMarkdown } from '@/lib/utils';
 import styles from './Admin.module.css';
 
@@ -397,7 +397,7 @@ export default function AdminPage() {
         <div className={styles.adminHeader}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
             <h2 style={{ margin: 0 }}>관리자 대시보드 v1.2</h2>
-            <button onClick={logoutAdmin} className={styles.cancelBtn}>로그아웃</button>
+            <button onClick={handleLogout} className={styles.cancelBtn}>로그아웃</button>
           </div>
           <div className={styles.adminTabs}>
             <button className={activeTab === 'posts' ? styles.active : ''} onClick={() => setActiveTab('posts')}>게시물 관리</button>
