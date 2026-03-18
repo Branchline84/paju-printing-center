@@ -788,7 +788,7 @@ export default function AdminPage() {
       )}
       {selectedPost && (
         <div className={styles.modal}>
-          <div className={styles.modalContent} style={{ maxWidth: '800px' }}>
+          <div className={styles.modalContent} style={{ maxWidth: '1000px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
               <span className={styles.badge} style={{ background: '#f0f0f2', padding: '4px 12px' }}>
                 {selectedPost.type === 'notice' ? '공지사항' : selectedPost.type === 'news' ? '센터소식' : '지원사업'}
