@@ -125,6 +125,8 @@
   border-radius: 28px;
   width: 100%;
   max-width: 1000px;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 30px 60px rgba(0,0,0,0.12);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
@@ -292,7 +294,7 @@
 .editorMain {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  min-height: 450px;
+  height: 550px;
 }
 
 .editorMain textarea {
