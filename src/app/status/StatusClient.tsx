@@ -138,12 +138,17 @@ export default function StatusClient({ initialStats, initialMembers }: { initial
                                       return (
                                         <div className={styles.imageGrid} style={{ marginBottom: '20px' }}>
                                           {urls.map((url: string, idx: number) => (
-                                            <div 
-                                              key={idx} 
-                                              className={styles.imageItem} 
-                                              style={{ backgroundImage: `url("${url}")` }}
-                                              onClick={() => window.open(url, '_blank')}
-                                            />
+                                            <div key={idx} className={styles.imageItem} onClick={() => window.open(url, '_blank')}>
+                                              <img 
+                                                src={url} 
+                                                alt={`업체 이미지 ${idx + 1}`} 
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                onError={(e) => {
+                                                  console.error("Image load failed:", url);
+                                                  (e.target as HTMLImageElement).src = 'https://placehold.co/400x400?text=이미지+로드+실패';
+                                                }}
+                                              />
+                                            </div>
                                           ))}
                                         </div>
                                       );

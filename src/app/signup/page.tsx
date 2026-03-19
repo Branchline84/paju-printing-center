@@ -26,30 +26,38 @@ export default function SignUpPage() {
     if (!files || files.length === 0) return;
 
     setUploading(true);
-    const uploadedUrls: string[] = [...form.imageUrls];
-
+    
     for (let i = 0; i < files.length; i++) {
-      try {
-        const formData = new FormData();
-        formData.append('file', files[i]);
-
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        const data = await res.json();
-        if (data.url) {
-          uploadedUrls.push(data.url);
-        } else {
-          alert(data.error || '업로드 실패');
+        // 최대 5장 제한 체크
+        if (form.imageUrls.length + (i + 1) > 5) {
+            alert('이미지는 최대 5장까지만 등록 가능합니다.');
+            break;
         }
-      } catch (error) {
-        console.error('Upload error:', error);
-      }
+
+        try {
+            const formData = new FormData();
+            formData.append('file', files[i]);
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await res.json();
+            if (data.url) {
+                // 한 장씩 즉시 상태 업데이트 (사용자 피드백 개선)
+                setForm(prev => ({ 
+                    ...prev, 
+                    imageUrls: [...prev.imageUrls, data.url] 
+                }));
+            } else {
+                alert(data.error || '업로드 실패');
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+        }
     }
 
-    setForm(prev => ({ ...prev, imageUrls: uploadedUrls }));
     setUploading(false);
   };
 

@@ -233,10 +233,10 @@
 .imageItem {
   aspect-ratio: 1;
   border-radius: 8px;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
   cursor: pointer;
   transition: transform 0.2s ease;
+  border: 1px solid #e2e8f0;
 }
 
 .imageItem:hover {
