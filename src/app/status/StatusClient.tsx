@@ -132,8 +132,25 @@ export default function StatusClient({ initialStats, initialMembers }: { initial
                             
                               <div className={styles.mediaArea}>
                                 {(() => {
+                                  if (!member.imageUrls) {
+                                    console.log(`[Status] No imageUrls for ${member.company}`);
+                                    return null;
+                                  }
+                                  
                                   try {
-                                    const urls = member.imageUrls ? JSON.parse(member.imageUrls) : [];
+                                    let urls = [];
+                                    const raw = member.imageUrls.trim();
+                                    
+                                    if (raw.startsWith('[') && raw.endsWith(']')) {
+                                      urls = JSON.parse(raw);
+                                    } else if (raw.startsWith('http')) {
+                                      // Fallback for single URL that wasn't properly stringified
+                                      urls = [raw];
+                                      console.warn(`[Status] imageUrls for ${member.company} is a single URL, not JSON:`, raw);
+                                    } else {
+                                      console.warn(`[Status] Unknown imageUrls format for ${member.company}:`, raw);
+                                    }
+
                                     if (Array.isArray(urls) && urls.length > 0) {
                                       return (
                                         <div className={styles.imageGrid} style={{ marginBottom: '20px' }}>
@@ -144,7 +161,7 @@ export default function StatusClient({ initialStats, initialMembers }: { initial
                                                 alt={`업체 이미지 ${idx + 1}`} 
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 onError={(e) => {
-                                                  console.error("Image load failed:", url);
+                                                  console.error(`[Status] Image Load Failed: ${url}`);
                                                   (e.target as HTMLImageElement).src = 'https://placehold.co/400x400?text=이미지+로드+실패';
                                                 }}
                                               />
@@ -154,7 +171,7 @@ export default function StatusClient({ initialStats, initialMembers }: { initial
                                       );
                                     }
                                   } catch (e) {
-                                    console.error("Failed to parse imageUrls:", e);
+                                    console.error(`[Status] Parse error for ${member.company}:`, e, member.imageUrls);
                                   }
                                   return null;
                                 })()}

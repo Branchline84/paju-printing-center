@@ -18,6 +18,7 @@ export default function SignUpPage() {
     videoUrl: '',
     isPublicConsent: false
   });
+  const [uploadProgress, setUploadProgress] = useState('');
   const [uploading, setUploading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -26,13 +27,16 @@ export default function SignUpPage() {
     if (!files || files.length === 0) return;
 
     setUploading(true);
+    const newUrls = [...form.imageUrls];
     
     for (let i = 0; i < files.length; i++) {
-        // 최대 5장 제한 체크
-        if (form.imageUrls.length + (i + 1) > 5) {
+        if (newUrls.length >= 5) {
             alert('이미지는 최대 5장까지만 등록 가능합니다.');
             break;
         }
+
+        setUploadProgress(`${i + 1}/${files.length} 업로드 중...`);
+        console.log(`Uploading file ${i + 1}/${files.length}:`, files[i].name);
 
         try {
             const formData = new FormData();
@@ -45,20 +49,20 @@ export default function SignUpPage() {
 
             const data = await res.json();
             if (data.url) {
-                // 한 장씩 즉시 상태 업데이트 (사용자 피드백 개선)
-                setForm(prev => ({ 
-                    ...prev, 
-                    imageUrls: [...prev.imageUrls, data.url] 
-                }));
+                console.log('Upload success:', data.url);
+                newUrls.push(data.url);
             } else {
-                alert(data.error || '업로드 실패');
+                console.error('Upload failed for file:', files[i].name, data.error);
+                alert(`${files[i].name} 업로드 실패: ${data.error}`);
             }
         } catch (error) {
             console.error('Upload error:', error);
         }
     }
 
+    setForm(prev => ({ ...prev, imageUrls: newUrls }));
     setUploading(false);
+    setUploadProgress('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -226,7 +230,7 @@ export default function SignUpPage() {
                         border: '1px solid #ddd' 
                       }} />
                     ))}
-                    {uploading && <div style={{ fontSize: '12px', alignSelf: 'center' }}>업로드 중...</div>}
+                    {uploading && <div style={{ fontSize: '12px', alignSelf: 'center', color: '#003366', fontWeight: 600 }}>{uploadProgress}</div>}
                   </div>
                 </div>
 
