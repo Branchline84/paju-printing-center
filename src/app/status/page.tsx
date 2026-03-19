@@ -7,27 +7,41 @@ import { prisma } from '@/lib/prisma';
 export const dynamic = 'force-dynamic';
 
 async function getStats() {
-  const totalMembers = await prisma.member.count({
-    where: { approved: true }
-  });
-  
-  const settings = await prisma.systemSetting.findFirst() || {
-    supportCount2026: 0,
-    operationYears: 1,
-  };
+  try {
+    const totalMembers = await prisma.member.count({
+      where: { approved: true }
+    });
+    
+    const settings = await prisma.systemSetting.findFirst() || {
+      supportCount2026: 0,
+      operationYears: 1,
+    };
 
-  return {
-    totalMembers,
-    supportCount2026: settings.supportCount2026,
-    operationYears: settings.operationYears,
-  };
+    return {
+      totalMembers,
+      supportCount2026: settings.supportCount2026,
+      operationYears: settings.operationYears,
+    };
+  } catch (error) {
+    console.error('Stats fetch error:', error);
+    return {
+      totalMembers: 0,
+      supportCount2026: 0,
+      operationYears: 1,
+    };
+  }
 }
 
 async function getMembers() {
-  return await prisma.member.findMany({
-    where: { approved: true },
-    orderBy: { name: 'asc' },
-  });
+  try {
+    return await prisma.member.findMany({
+      where: { approved: true },
+      orderBy: { name: 'asc' },
+    });
+  } catch (error) {
+    console.error('Members fetch error:', error);
+    return [];
+  }
 }
 
 export default async function StatusPage() {
