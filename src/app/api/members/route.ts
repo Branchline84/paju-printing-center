@@ -31,12 +31,9 @@ export async function GET() {
       orderBy: { createdAt: 'desc' },
     });
     return NextResponse.json(members);
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
-    return NextResponse.json({ 
-      error: 'Failed to fetch members',
-      details: error.message || String(error)
-    }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch members' }, { status: 500 });
   }
 }
 
