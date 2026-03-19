@@ -272,7 +272,7 @@ export default function SignUpPage() {
                         width: '60px', 
                         height: '60px', 
                         borderRadius: '4px', 
-                        backgroundImage: `url("${url}")`,
+                        backgroundImage: `url("/api/images/blob.jpg?url=${encodeURIComponent(url)}")`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
