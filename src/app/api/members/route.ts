@@ -16,6 +16,7 @@ export async function POST(request: Request) {
         mainProducts: body.mainProducts,
         imageUrls: body.imageUrls,
         videoUrl: body.videoUrl,
+        isPublicConsent: body.isPublicConsent || false,
       },
     });
     return NextResponse.json(member);

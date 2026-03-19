@@ -15,7 +15,8 @@ export default function SignUpPage() {
     representative: '', 
     mainProducts: '', 
     imageUrls: [] as string[], 
-    videoUrl: '' 
+    videoUrl: '',
+    isPublicConsent: false
   });
   const [uploading, setUploading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -59,7 +60,8 @@ export default function SignUpPage() {
         method: 'POST',
         body: JSON.stringify({
           ...form,
-          imageUrls: JSON.stringify(form.imageUrls)
+          imageUrls: JSON.stringify(form.imageUrls),
+          isPublicConsent: form.isPublicConsent
         }),
         headers: { 'Content-Type': 'application/json' },
       });
@@ -144,7 +146,7 @@ export default function SignUpPage() {
                 </li>
                 <li className={styles.noticeItem}>
                   <b>정보 보호</b>
-                  <span>수집된 정보는 소공인 지원을 위한 현황 파악 및 상담 기초 자료로만 활용되며 외부로 유출되지 않습니다.</span>
+                  <span>수집된 정보는 소공인 지원을 위한 현황 파악 및 상담 기초 자료로 활용되며, 업체명, 대표자, 주요생산품, 이미지 및 동영상 등은 홈페이지 '소공인현황' 서비스를 통해 외부에 공개될 수 있습니다.</span>
                 </li>
               </ul>
             </div>
@@ -216,7 +218,28 @@ export default function SignUpPage() {
                   <input type="text" placeholder="https://www.youtube.com/watch?v=..." value={form.videoUrl} onChange={e => setForm({...form, videoUrl: e.target.value})} />
                 </div>
 
-                <button type="submit" className={styles.submitBtn} disabled={uploading}>가입 및 상담 신청하기</button>
+                <div 
+                  className={styles.checkboxGroup} 
+                  onClick={() => setForm({...form, isPublicConsent: !form.isPublicConsent})}
+                >
+                  <input 
+                    type="checkbox" 
+                    checked={form.isPublicConsent} 
+                    onChange={() => {}} // onClick handles it
+                  />
+                  <span className={styles.checkboxLabel}>
+                    <b>[필수]</b> 위 입력한 업체 정보(업체명, 대표자, 생산품, 이미지 등)를 파주소공인특화지원센터 홈페이지 <b>'소공인현황' 페이지에 공개</b>하는 것에 동의합니다.
+                  </span>
+                </div>
+
+                <button 
+                  type="submit" 
+                  className={styles.submitBtn} 
+                  disabled={uploading || !form.isPublicConsent}
+                  style={{ opacity: (uploading || !form.isPublicConsent) ? 0.5 : 1 }}
+                >
+                  가입 및 상담 신청하기
+                </button>
                 <button 
                   type="button" 
                   onClick={() => setShowForm(false)} 

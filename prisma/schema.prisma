@@ -31,6 +31,7 @@ model Member {
   imageUrls      String?  // 업체 이미지 (JSON array)
   videoUrl       String?  // 업체 동영상
   approved       Boolean  @default(false)
+  isPublicConsent Boolean @default(false) // 정보 공개 동의 여부
   createdAt      DateTime @default(now())
 }
 

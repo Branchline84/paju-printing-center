@@ -198,6 +198,42 @@
   box-shadow: 0 0 0 4px rgba(0,51,102,0.1);
 }
 
+.checkboxGroup {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+  background: #f9f9fb;
+  border-radius: 12px;
+  margin-top: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.checkboxGroup:hover {
+  background: #f1f1f4;
+}
+
+.checkboxGroup input {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  font-size: 14px;
+  color: #1d1d1f;
+  line-height: 1.5;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkboxLabel b {
+  color: #003366;
+}
+
 .submitBtn {
   background: #003366;
   color: #fff;
