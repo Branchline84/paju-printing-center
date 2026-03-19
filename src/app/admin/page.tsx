@@ -154,6 +154,50 @@ export default function AdminPage() {
     }
   };
 
+  // Client-side image resizer with canvas
+  const resizeImage = (file: File): Promise<Blob | File> => {
+    return new Promise((resolve) => {
+      if (file.size < 1 * 1024 * 1024) {
+        resolve(file); // 1MB 이하는 그냥 보냄
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          const MAX_SIZE = 1920;
+          if (width > height) {
+            if (width > MAX_SIZE) {
+              height *= MAX_SIZE / width;
+              width = MAX_SIZE;
+            }
+          } else {
+            if (height > MAX_SIZE) {
+              width *= MAX_SIZE / height;
+              height = MAX_SIZE;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob((blob) => {
+            resolve(blob || file);
+          }, 'image/jpeg', 0.7);
+        };
+        img.src = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -164,15 +208,22 @@ export default function AdminPage() {
     for (let i = 0; i < files.length; i++) {
         try {
             const file = files[i];
-            const blob = await upload(file.name, file, {
-                access: 'public',
-                handleUploadUrl: '/api/upload',
+            const resizedBlob = await resizeImage(file);
+            const formData = new FormData();
+            formData.append('file', resizedBlob, file.name);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
             });
 
-            if (blob.url) {
+            if (!response.ok) throw new Error('업로드 중 오류 발생');
+
+            const newBlob = await response.json();
+            if (newBlob.url) {
                 setNewPost(prev => ({
                     ...prev,
-                    imageUrls: [...prev.imageUrls, blob.url]
+                    imageUrls: [...prev.imageUrls, newBlob.url]
                 }));
             }
         } catch (error: any) {
@@ -192,15 +243,22 @@ export default function AdminPage() {
     for (let i = 0; i < files.length; i++) {
         try {
             const file = files[i];
-            const blob = await upload(file.name, file, {
-                access: 'public',
-                handleUploadUrl: '/api/upload',
+            // 리소스 파일은 리사이징하지 않음 (문서 등일 수 있음)
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
             });
 
-            if (blob.url) {
+            if (!response.ok) throw new Error('업로드 중 오류 발생');
+
+            const newBlob = await response.json();
+            if (newBlob.url) {
                 setNewPost(prev => ({
                     ...prev,
-                    fileUrls: [...prev.fileUrls, blob.url]
+                    fileUrls: [...prev.fileUrls, newBlob.url]
                 }));
             }
         } catch (error: any) {
@@ -216,14 +274,22 @@ export default function AdminPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setUploading(true);
     try {
-        const blob = await upload(file.name, file, {
-            access: 'public',
-            handleUploadUrl: '/api/upload',
+        const resizedBlob = await resizeImage(file);
+        const formData = new FormData();
+        formData.append('file', resizedBlob, file.name);
+
+        const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
         });
 
-        if (blob.url) {
-            setNewBanner(prev => ({ ...prev, imageUrl: blob.url }));
+        if (!response.ok) throw new Error('업로드 중 오류 발생');
+
+        const newBlob = await response.json();
+        if (newBlob.url) {
+            setNewBanner(prev => ({ ...prev, imageUrl: newBlob.url }));
         }
     } catch (error: any) {
         console.error('Upload failed', error);
@@ -491,11 +557,12 @@ export default function AdminPage() {
                         const urls = [...newMember.imageUrls];
                         for (let i = 0; i < files.length; i++) {
                           try {
-                            const blob = await upload(files[i].name, files[i], {
-                              access: 'public',
-                              handleUploadUrl: '/api/upload',
-                            });
-                            if (blob.url) urls.push(blob.url);
+                            const resizedBlob = await resizeImage(files[i]);
+                            const fd = new FormData();
+                            fd.append('file', resizedBlob, files[i].name);
+                            const res = await fetch('/api/upload', { method: 'POST', body: fd });
+                            const data = await res.json();
+                            if (data.url) urls.push(data.url);
                           } catch (error: any) {
                             console.error('Upload failed', error);
                             alert(`업로드 실패: ${error.message}`);

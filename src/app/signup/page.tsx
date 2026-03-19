@@ -23,6 +23,52 @@ export default function SignUpPage() {
   const [uploading, setUploading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  // Client-side image resizer with canvas
+  const resizeImage = (file: File): Promise<Blob | File> => {
+    return new Promise((resolve) => {
+      if (file.size < 1 * 1024 * 1024) {
+        resolve(file); // 1MB 이하는 그냥 보냄
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          // 최대 해상도 제한 (약 1920px)
+          const MAX_SIZE = 1920;
+          if (width > height) {
+            if (width > MAX_SIZE) {
+              height *= MAX_SIZE / width;
+              width = MAX_SIZE;
+            }
+          } else {
+            if (height > MAX_SIZE) {
+              width *= MAX_SIZE / height;
+              height = MAX_SIZE;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // 0.7 퀄리티로 압축 (용량 대폭 감소)
+          canvas.toBlob((blob) => {
+            resolve(blob || file);
+          }, 'image/jpeg', 0.7);
+        };
+        img.src = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -36,21 +82,27 @@ export default function SignUpPage() {
             break;
         }
 
-        setUploadProgress(`${i + 1}/${files.length} 업로드 중...`);
+        setUploadProgress(`${i + 1}/${files.length} 압축 및 업로드 중...`);
         
         try {
-            const file = files[i];
-            // Client-side direct upload to bypass 413 Payload Too Large (Vercel Limit)
-            const blob = await upload(file.name, file, {
-                access: 'public',
-                handleUploadUrl: '/api/upload',
+            const originalFile = files[i];
+            const resizedBlob = await resizeImage(originalFile);
+            
+            const formData = new FormData();
+            formData.append('file', resizedBlob, originalFile.name);
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
             });
 
-            if (blob.url) {
-                console.log('Client upload success:', blob.url);
-                newUrls.push(blob.url);
-                // 즉시 업데이트하여 피드백 주기
+            const data = await res.json();
+            if (data.url) {
+                console.log('Upload success:', data.url);
+                newUrls.push(data.url);
                 setForm(prev => ({ ...prev, imageUrls: [...newUrls] }));
+            } else {
+                throw new Error(data.error || '업로드 실패');
             }
         } catch (error: any) {
             console.error('Upload error:', error);
@@ -58,7 +110,6 @@ export default function SignUpPage() {
         }
     }
 
-    setForm(prev => ({ ...prev, imageUrls: newUrls }));
     setUploading(false);
     setUploadProgress('');
   };
