@@ -137,7 +137,7 @@ export default function StatusClient({ initialStats, initialMembers }: { initial
                                     <div 
                                       key={idx} 
                                       className={styles.imageItem} 
-                                      style={{ backgroundImage: `url(${url})` }}
+                                      style={{ backgroundImage: `url("${url}")` }}
                                       onClick={() => window.open(url, '_blank')}
                                     />
                                   ))}

@@ -21,10 +21,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     const extension = file.name.split('.').pop();
     const safeFileName = `direct-${uuidv4()}.${extension}`;
 
-    // Vercel Blob으로 직접 업로드
-    // 사용자 스토리지 설정이 Private이므로 access: 'private'을 강제 적용합니다.
     const blob = await put(safeFileName, file, {
-      access: 'private',
+      access: 'public',
     });
 
     console.log('[Direct Upload] SUCCESS URL:', blob.url);
