@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import styles from './Signup.module.css';
+import { upload } from '@vercel/blob/client';
 
 export default function SignUpPage() {
   const [showForm, setShowForm] = useState(false);
@@ -36,27 +37,24 @@ export default function SignUpPage() {
         }
 
         setUploadProgress(`${i + 1}/${files.length} 업로드 중...`);
-        console.log(`Uploading file ${i + 1}/${files.length}:`, files[i].name);
-
+        
         try {
-            const formData = new FormData();
-            formData.append('file', files[i]);
-
-            const res = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
+            const file = files[i];
+            // Client-side direct upload to bypass 413 Payload Too Large (Vercel Limit)
+            const blob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
             });
 
-            const data = await res.json();
-            if (data.url) {
-                console.log('Upload success:', data.url);
-                newUrls.push(data.url);
-            } else {
-                console.error('Upload failed for file:', files[i].name, data.error);
-                alert(`${files[i].name} 업로드 실패: ${data.error}`);
+            if (blob.url) {
+                console.log('Client upload success:', blob.url);
+                newUrls.push(blob.url);
+                // 즉시 업데이트하여 피드백 주기
+                setForm(prev => ({ ...prev, imageUrls: [...newUrls] }));
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Upload error:', error);
+            alert(`${files[i].name} 업로드 실패: ${error.message}`);
         }
     }
 

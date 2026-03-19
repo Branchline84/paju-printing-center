@@ -6,6 +6,7 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import BackgroundDecor from '../../components/BackgroundDecor';
 import { useRouter } from 'next/navigation';
+import { upload } from '@vercel/blob/client';
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<'posts' | 'banners' | 'members' | 'inquiries' | 'resources' | 'settings'>('posts');
@@ -163,25 +164,20 @@ export default function AdminPage() {
     for (let i = 0; i < files.length; i++) {
         try {
             const file = files[i];
-            const formData = new FormData();
-            formData.append('file', file);
-
-            const response = await fetch('/api/upload-direct', {
-                method: 'POST',
-                body: formData,
+            const blob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
             });
 
-            if (!response.ok) throw new Error('업로드 중 오류 발생');
-
-            const newBlob = await response.json();
-            if (newBlob.url) {
+            if (blob.url) {
                 setNewPost(prev => ({
                     ...prev,
-                    imageUrls: [...prev.imageUrls, newBlob.url]
+                    imageUrls: [...prev.imageUrls, blob.url]
                 }));
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Upload failed', error);
+            alert(`업로드 실패: ${error.message}`);
         }
     }
     setUploading(false);
@@ -196,25 +192,20 @@ export default function AdminPage() {
     for (let i = 0; i < files.length; i++) {
         try {
             const file = files[i];
-            const formData = new FormData();
-            formData.append('file', file);
-
-            const response = await fetch('/api/upload-direct', {
-                method: 'POST',
-                body: formData,
+            const blob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
             });
 
-            if (!response.ok) throw new Error('업로드 중 오류 발생');
-
-            const newBlob = await response.json();
-            if (newBlob.url) {
+            if (blob.url) {
                 setNewPost(prev => ({
                     ...prev,
-                    fileUrls: [...prev.fileUrls, newBlob.url]
+                    fileUrls: [...prev.fileUrls, blob.url]
                 }));
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Upload failed', error);
+            alert(`업로드 실패: ${error.message}`);
         }
     }
     setUploading(false);
@@ -225,24 +216,18 @@ export default function AdminPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploading(true);
     try {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const response = await fetch('/api/upload-direct', {
-            method: 'POST',
-            body: formData,
+        const blob = await upload(file.name, file, {
+            access: 'public',
+            handleUploadUrl: '/api/upload',
         });
 
-        if (!response.ok) throw new Error('업로드 중 오류 발생');
-
-        const newBlob = await response.json();
-        if (newBlob.url) {
-            setNewBanner(prev => ({ ...prev, imageUrl: newBlob.url }));
+        if (blob.url) {
+            setNewBanner(prev => ({ ...prev, imageUrl: blob.url }));
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error('Upload failed', error);
+        alert(`업로드 실패: ${error.message}`);
     }
     setUploading(false);
     if (bannerInputRef.current) bannerInputRef.current.value = '';
@@ -505,11 +490,16 @@ export default function AdminPage() {
                         setUploading(true);
                         const urls = [...newMember.imageUrls];
                         for (let i = 0; i < files.length; i++) {
-                          const fd = new FormData();
-                          fd.append('file', files[i]);
-                          const res = await fetch('/api/upload-direct', { method: 'POST', body: fd });
-                          const data = await res.json();
-                          if (data.url) urls.push(data.url);
+                          try {
+                            const blob = await upload(files[i].name, files[i], {
+                              access: 'public',
+                              handleUploadUrl: '/api/upload',
+                            });
+                            if (blob.url) urls.push(blob.url);
+                          } catch (error: any) {
+                            console.error('Upload failed', error);
+                            alert(`업로드 실패: ${error.message}`);
+                          }
                         }
                         setNewMember({...newMember, imageUrls: urls});
                         setUploading(false);
