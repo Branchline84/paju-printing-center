@@ -27,7 +27,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     // Vercel Blob으로 업로드 (Server-side put)
     // Client-side resizing will ensure file size is < 4.5MB limit
     const blob = await put(safeFileName, file, {
-      access: 'public',
+      access: 'private',
     });
 
     return NextResponse.json({ ...blob, success: true });
