@@ -573,16 +573,16 @@ export default function AdminPage() {
                       }} />
                       <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
                         {newMember.imageUrls.map((url, i) => (
-                          <div key={i} style={{ 
-                            width: '60px', 
-                            height: '60px', 
-                            borderRadius: '8px', 
-                            backgroundImage: `url("${url}")`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                            border: '1px solid #ddd' 
-                          }} />
+                            <div key={i} style={{ 
+                              width: '60px', 
+                              height: '60px', 
+                              borderRadius: '8px', 
+                              backgroundImage: `url("/api/images/blob.jpg?url=${encodeURIComponent(url)}")`,
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              backgroundRepeat: 'no-repeat',
+                              border: '1px solid #ddd' 
+                            }} />
                         ))}
                       </div>
                     </div>

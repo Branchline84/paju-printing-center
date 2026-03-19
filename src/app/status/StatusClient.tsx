@@ -157,7 +157,7 @@ export default function StatusClient({ initialStats, initialMembers }: { initial
                                           {urls.map((url: string, idx: number) => (
                                             <div key={idx} className={styles.imageItem} onClick={() => window.open(url, '_blank')}>
                                               <img 
-                                                src={url} 
+                                                src={`/api/images/blob.jpg?url=${encodeURIComponent(url)}`} 
                                                 alt={`업체 이미지 ${idx + 1}`} 
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 onError={(e) => {
