@@ -82,6 +82,7 @@ export default function Header() {
           <Link href="/about" onClick={() => setIsMobileMenuOpen(false)}>{t('intro')}</Link>
           <Link href="/notice" onClick={() => setIsMobileMenuOpen(false)}>{t('notice')}</Link>
           <Link href="/resources" onClick={() => setIsMobileMenuOpen(false)}>자료실</Link>
+          <Link href="/status" onClick={() => setIsMobileMenuOpen(false)}>{t('status')}</Link>
           <Link href="/support" onClick={() => setIsMobileMenuOpen(false)}>{t('projects')}</Link>
           <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>{t('contact')}</Link>
           <Link href="/signup" className={styles.signupBtn} onClick={() => setIsMobileMenuOpen(false)}>{t('signup')}</Link>

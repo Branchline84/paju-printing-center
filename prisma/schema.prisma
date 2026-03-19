@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Post {
@@ -21,13 +21,24 @@ model Post {
 }
 
 model Member {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String
-  company   String?
-  phone     String?
-  approved  Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  name           String
+  company        String?
+  phone          String?
+  representative String?  // 대표자
+  mainProducts   String?  // 주요생산품
+  imageUrls      String?  // 업체 이미지 (JSON array)
+  videoUrl       String?  // 업체 동영상
+  approved       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+}
+
+model SystemSetting {
+  id                Int      @id @default(1)
+  supportCount2026  Int      @default(0)
+  operationYears    Int      @default(1)
+  updatedAt         DateTime @updatedAt
 }
 
 model Inquiry {

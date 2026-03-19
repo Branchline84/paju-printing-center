@@ -7,15 +7,60 @@ import styles from './Signup.module.css';
 
 export default function SignUpPage() {
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', company: '', phone: '' });
+  const [form, setForm] = useState({ 
+    name: '', 
+    email: '', 
+    company: '', 
+    phone: '', 
+    representative: '', 
+    mainProducts: '', 
+    imageUrls: [] as string[], 
+    videoUrl: '' 
+  });
+  const [uploading, setUploading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    const uploadedUrls: string[] = [...form.imageUrls];
+
+    for (let i = 0; i < files.length; i++) {
+      try {
+        const formData = new FormData();
+        formData.append('file', files[i]);
+
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (data.url) {
+          uploadedUrls.push(data.url);
+        } else {
+          alert(data.error || '업로드 실패');
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+      }
+    }
+
+    setForm(prev => ({ ...prev, imageUrls: uploadedUrls }));
+    setUploading(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await fetch('/api/members', {
         method: 'POST',
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          imageUrls: JSON.stringify(form.imageUrls)
+        }),
         headers: { 'Content-Type': 'application/json' },
       });
       setSubmitted(true);
@@ -123,23 +168,55 @@ export default function SignUpPage() {
                 <p style={{ color: '#86868b' }}>신청 정보를 입력해 주세요.</p>
               </div>
               <form onSubmit={handleSubmit} className={styles.form}>
-                <div className={styles.inputGroup}>
-                  <label>이름</label>
-                  <input type="text" placeholder="성함을 입력하세요" required value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                  <div className={styles.inputGroup}>
+                    <label>회사명</label>
+                    <input type="text" placeholder="사업장 명칭" required value={form.company} onChange={e => setForm({...form, company: e.target.value})} />
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label>대표자명</label>
+                    <input type="text" placeholder="대표 성함" required value={form.representative} onChange={e => setForm({...form, representative: e.target.value})} />
+                  </div>
                 </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                  <div className={styles.inputGroup}>
+                    <label>이름 (담당자)</label>
+                    <input type="text" placeholder="담당자 성함" required value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label>연락처</label>
+                    <input type="tel" placeholder="010-0000-0000" required value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
+                  </div>
+                </div>
+
                 <div className={styles.inputGroup}>
                   <label>이메일</label>
                   <input type="email" placeholder="example@email.com" required value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
                 </div>
+
                 <div className={styles.inputGroup}>
-                  <label>회사명</label>
-                  <input type="text" placeholder="사업장 명칭" required value={form.company} onChange={e => setForm({...form, company: e.target.value})} />
+                  <label>주요생산품</label>
+                  <input type="text" placeholder="예: 옵셋인쇄, 디지털인쇄, 제본 등" required value={form.mainProducts} onChange={e => setForm({...form, mainProducts: e.target.value})} />
                 </div>
+
                 <div className={styles.inputGroup}>
-                  <label>연락처</label>
-                  <input type="tel" placeholder="010-0000-0000" required value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
+                  <label>업체 이미지 업로드 (최대 5장)</label>
+                  <input type="file" multiple accept="image/*" onChange={handleFileUpload} disabled={uploading} />
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
+                    {form.imageUrls.map((url, i) => (
+                      <div key={i} style={{ width: '60px', height: '60px', borderRadius: '4px', background: `url(${url}) center/cover no-repeat`, border: '1px solid #ddd' }} />
+                    ))}
+                    {uploading && <div style={{ fontSize: '12px', alignSelf: 'center' }}>업로드 중...</div>}
+                  </div>
                 </div>
-                <button type="submit" className={styles.submitBtn}>가입 및 상담 신청하기</button>
+
+                <div className={styles.inputGroup}>
+                  <label>홍보 동영상 URL (YouTube)</label>
+                  <input type="text" placeholder="https://www.youtube.com/watch?v=..." value={form.videoUrl} onChange={e => setForm({...form, videoUrl: e.target.value})} />
+                </div>
+
+                <button type="submit" className={styles.submitBtn} disabled={uploading}>가입 및 상담 신청하기</button>
                 <button 
                   type="button" 
                   onClick={() => setShowForm(false)} 

@@ -12,6 +12,10 @@ export async function POST(request: Request) {
         name: body.name,
         company: body.company,
         phone: body.phone,
+        representative: body.representative,
+        mainProducts: body.mainProducts,
+        imageUrls: body.imageUrls,
+        videoUrl: body.videoUrl,
       },
     });
     return NextResponse.json(member);

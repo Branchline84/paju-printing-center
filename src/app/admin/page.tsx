@@ -8,8 +8,9 @@ import BackgroundDecor from '../../components/BackgroundDecor';
 import { useRouter } from 'next/navigation';
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'posts' | 'banners' | 'members' | 'inquiries' | 'resources'>('posts');
+  const [activeTab, setActiveTab] = useState<'posts' | 'banners' | 'members' | 'inquiries' | 'resources' | 'settings'>('posts');
   const [data, setData] = useState<any[]>([]);
+  const [settings, setSettings] = useState({ supportCount2026: 0, operationYears: 1 });
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -25,6 +26,18 @@ export default function AdminPage() {
     imageUrls: [] as string[],
     fileUrls: [] as string[],
     videoUrl: ''
+  });
+
+  const [newMember, setNewMember] = useState({
+    name: '',
+    email: '',
+    company: '',
+    phone: '',
+    representative: '',
+    mainProducts: '',
+    imageUrls: [] as string[],
+    videoUrl: '',
+    approved: false
   });
 
   const [newBanner, setNewBanner] = useState({
@@ -48,6 +61,13 @@ export default function AdminPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
+      if (activeTab === 'settings') {
+        const res = await fetch('/api/settings');
+        const result = await res.json();
+        setSettings(result);
+        return;
+      }
+
       let url = '/api/posts';
       if (activeTab === 'banners') url = '/api/banners';
       if (activeTab === 'members') url = '/api/members';
@@ -69,9 +89,12 @@ export default function AdminPage() {
     router.push('/admin/login');
   };
 
-  const handleDeletePost = async (id: number) => {
+  const handleDelete = async (id: number) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
-    const url = activeTab === 'banners' ? `/api/banners/${id}` : `/api/posts/${id}`;
+    let url = `/api/posts/${id}`;
+    if (activeTab === 'banners') url = `/api/banners/${id}`;
+    if (activeTab === 'members') url = `/api/members/${id}`;
+    
     const res = await fetch(url, { method: 'DELETE' });
     if (res.ok) fetchData();
   };
@@ -92,6 +115,42 @@ export default function AdminPage() {
       body: JSON.stringify({ status })
     });
     if (res.ok) fetchData();
+  };
+
+  const handleSubmitSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = await fetch('/api/settings', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(settings)
+    });
+    if (res.ok) {
+      alert('설정이 저장되었습니다.');
+      fetchData();
+    }
+  };
+
+  const handleSubmitMember = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const method = editingId ? 'PATCH' : 'POST';
+    const url = editingId ? `/api/members/${editingId}` : '/api/members';
+
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...newMember,
+        imageUrls: JSON.stringify(newMember.imageUrls)
+      })
+    });
+
+    if (res.ok) {
+      setIsModalOpen(false);
+      setEditingId(null);
+      setNewMember({ name: '', email: '', company: '', phone: '', representative: '', mainProducts: '', imageUrls: [], videoUrl: '', approved: false });
+      fetchData();
+      alert(editingId ? '회원 정보가 수정되었습니다.' : '회원이 등록되었습니다.');
+    }
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -283,94 +342,134 @@ export default function AdminPage() {
             <h2 style={{ margin: 0 }}>관리자 대시보드</h2>
             <button onClick={handleLogout} className={styles.cancelBtn}>로그아웃</button>
           </div>
-          <div className={styles.adminTabs}>
-            <button className={activeTab === 'posts' ? styles.active : ''} onClick={() => setActiveTab('posts')}>게시물 관리</button>
-            <button className={activeTab === 'resources' ? styles.active : ''} onClick={() => setActiveTab('resources')}>자료실 관리</button>
-            <button className={activeTab === 'banners' ? styles.active : ''} onClick={() => setActiveTab('banners')}>배너 관리</button>
-            <button className={activeTab === 'members' ? styles.active : ''} onClick={() => setActiveTab('members')}>회원 가입</button>
-            <button className={activeTab === 'inquiries' ? styles.active : ''} onClick={() => setActiveTab('inquiries')}>문의 내역</button>
+            <div className={styles.adminTabs}>
+              <button className={activeTab === 'posts' ? styles.active : ''} onClick={() => setActiveTab('posts')}>게시물 관리</button>
+              <button className={activeTab === 'resources' ? styles.active : ''} onClick={() => setActiveTab('resources')}>자료실 관리</button>
+              <button className={activeTab === 'banners' ? styles.active : ''} onClick={() => setActiveTab('banners')}>배너 관리</button>
+              <button className={activeTab === 'members' ? styles.active : ''} onClick={() => setActiveTab('members')}>소공인 관리</button>
+              <button className={activeTab === 'inquiries' ? styles.active : ''} onClick={() => setActiveTab('inquiries')}>문의 내역</button>
+              <button className={activeTab === 'settings' ? styles.active : ''} onClick={() => setActiveTab('settings')}>통계/설정</button>
+            </div>
           </div>
-        </div>
-
-        <div className={styles.actionRow}>
-          <h3>{activeTab === 'posts' ? '전체 게시물' : activeTab === 'resources' ? '자료실 목록' : activeTab === 'banners' ? '배너 목록' : activeTab === 'members' ? '회원 목록' : '문의 접수 내역'}</h3>
-          {(activeTab === 'posts' || activeTab === 'resources' || activeTab === 'banners') && (
-            <button className={styles.createBtn} onClick={() => {
-                setEditingId(null);
-                if (activeTab === 'posts' || activeTab === 'resources') {
-                    setNewPost({ title: '', type: activeTab === 'resources' ? 'resource' : 'notice', content: '', author: '관리자', imageUrls: [], fileUrls: [], videoUrl: '' });
-                } else {
-                    setNewBanner({ title: '', subtitle: '', imageUrl: '', order: 0, isActive: true });
-                }
-                setIsModalOpen(true);
-            }}>
-                + {activeTab === 'banners' ? '새 배너 등록' : '새 게시물 작성'}
-            </button>
-          )}
-        </div>
-
-        <section className={styles.contentTable}>
-          {loading ? (
-            <div style={{ padding: '40px', textAlign: 'center' }}>데이터를 불러오는 중...</div>
-          ) : (
-            <table className={styles.adminTable}>
-              <thead>
-                <tr>
-                  <th style={{ width: '80px' }}>ID</th>
-                  <th>{activeTab === 'members' || activeTab === 'inquiries' ? '내용/이메일' : '제목'}</th>
-                  <th style={{ width: '120px' }}>유형/상태</th>
-                  <th style={{ width: '150px' }}>날짜</th>
-                  <th style={{ width: '120px' }}>액션</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>
-                      <div 
-                        style={{ fontWeight: 600, color: '#003366', cursor: 'pointer' }}
-                        onClick={() => setSelectedPost(item)}
-                      >
-                        {item.title || item.name || item.subject}
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#666' }}>{item.email || item.message?.substring(0, 30)}</div>
-                    </td>
-                    <td>
-                      <span className={styles.badge}>
-                        {activeTab === 'resources' ? '자료' : item.type || item.status || (item.isActive ? '활성' : '비활성')}
-                      </span>
-                    </td>
-                    <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td>
-                      <div style={{ display: 'flex', gap: '5px' }}>
-                        {(activeTab === 'posts' || activeTab === 'resources' || activeTab === 'banners') && (
-                          <button 
-                            className={styles.editActionBtn}
-                            onClick={() => {
-                                setEditingId(item.id);
-                                if (activeTab === 'banners') {
-                                    setNewBanner({...item});
-                                } else {
-                                    setNewPost({
-                                        ...item,
-                                        imageUrls: item.imageUrls ? JSON.parse(item.imageUrls) : [],
-                                        fileUrls: item.fileUrls ? JSON.parse(item.fileUrls) : []
-                                    });
-                                }
-                                setIsModalOpen(true);
-                            }}
-                          >수정</button>
-                        )}
-                        <button className={styles.deleteActionBtn} onClick={() => handleDeletePost(item.id)}>삭제</button>
-                      </div>
-                    </td>
+  
+          <div className={styles.actionRow}>
+            <h3>{activeTab === 'posts' ? '전체 게시물' : activeTab === 'resources' ? '자료실 목록' : activeTab === 'banners' ? '배너 목록' : activeTab === 'members' ? '소공인 목록' : activeTab === 'settings' ? '시스템 통계 설정' : '문의 접수 내역'}</h3>
+            {(activeTab === 'posts' || activeTab === 'resources' || activeTab === 'banners' || activeTab === 'members') && (
+              <button className={styles.createBtn} onClick={() => {
+                  setEditingId(null);
+                  if (activeTab === 'posts' || activeTab === 'resources') {
+                      setNewPost({ title: '', type: activeTab === 'resources' ? 'resource' : 'notice', content: '', author: '관리자', imageUrls: [], fileUrls: [], videoUrl: '' });
+                  } else if (activeTab === 'banners') {
+                      setNewBanner({ title: '', subtitle: '', imageUrl: '', order: 0, isActive: true });
+                  } else if (activeTab === 'members') {
+                      setNewMember({ name: '', email: '', company: '', phone: '', representative: '', mainProducts: '', imageUrls: [], videoUrl: '', approved: false });
+                  }
+                  setIsModalOpen(true);
+              }}>
+                  + {activeTab === 'banners' ? '새 배너 등록' : activeTab === 'members' ? '새 소공인 등록' : '새 게시물 작성'}
+              </button>
+            )}
+          </div>
+  
+          <section className={styles.contentTable}>
+            {loading ? (
+              <div style={{ padding: '40px', textAlign: 'center' }}>데이터를 불러오는 중...</div>
+            ) : activeTab === 'settings' ? (
+              <div style={{ padding: '40px', maxWidth: '600px' }}>
+                <form onSubmit={handleSubmitSettings}>
+                  <div className={styles.formGroup}>
+                    <label>2026년 지원사업 신청 건수 (수동)</label>
+                    <input type="number" value={settings.supportCount2026} onChange={e => setSettings({...settings, supportCount2026: parseInt(e.target.value)})} />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>센터 운영연도 (수동)</label>
+                    <input type="number" value={settings.operationYears} onChange={e => setSettings({...settings, operationYears: parseInt(e.target.value)})} />
+                  </div>
+                  <button type="submit" className={styles.submitBtn}>설정 저장하기</button>
+                </form>
+              </div>
+            ) : (
+              <table className={styles.adminTable}>
+                <thead>
+                  <tr>
+                    <th style={{ width: '80px' }}>ID</th>
+                    <th>{activeTab === 'members' ? '업체명/이메일' : activeTab === 'inquiries' ? '내용/이메일' : '제목'}</th>
+                    <th style={{ width: '120px' }}>{activeTab === 'members' ? '대표자' : '유형/상태'}</th>
+                    <th style={{ width: '150px' }}>날짜</th>
+                    <th style={{ width: '120px' }}>액션</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </section>
+                </thead>
+                <tbody>
+                  {data.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.id}</td>
+                      <td>
+                        <div 
+                          style={{ fontWeight: 600, color: '#003366', cursor: 'pointer' }}
+                          onClick={() => {
+                            if (activeTab === 'members') {
+                              setEditingId(item.id);
+                              setNewMember({
+                                ...item,
+                                imageUrls: item.imageUrls ? JSON.parse(item.imageUrls) : []
+                              });
+                              setIsModalOpen(true);
+                            } else {
+                              setSelectedPost(item);
+                            }
+                          }}
+                        >
+                          {item.company || item.title || item.name || item.subject}
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#666' }}>{item.email || item.message?.substring(0, 30)}</div>
+                      </td>
+                      <td>
+                        {activeTab === 'members' ? (
+                          <span>{item.representative || '-'}</span>
+                        ) : (
+                          <span className={styles.badge}>
+                            {activeTab === 'resources' ? '자료' : item.type || item.status || (item.isActive ? '활성' : '비활성')}
+                          </span>
+                        )}
+                      </td>
+                      <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td>
+                        <div style={{ display: 'flex', gap: '5px' }}>
+                          {(activeTab === 'posts' || activeTab === 'resources' || activeTab === 'banners' || activeTab === 'members') && (
+                            <button 
+                              className={styles.editActionBtn}
+                              onClick={() => {
+                                  setEditingId(item.id);
+                                  if (activeTab === 'banners') {
+                                      setNewBanner({...item});
+                                  } else if (activeTab === 'members') {
+                                      setNewMember({
+                                          ...item,
+                                          imageUrls: item.imageUrls ? JSON.parse(item.imageUrls) : []
+                                      });
+                                  } else {
+                                      setNewPost({
+                                          ...item,
+                                          imageUrls: item.imageUrls ? JSON.parse(item.imageUrls) : [],
+                                          fileUrls: item.fileUrls ? JSON.parse(item.fileUrls) : []
+                                      });
+                                  }
+                                  setIsModalOpen(true);
+                              }}
+                            >수정</button>
+                          )}
+                          {activeTab === 'members' && !item.approved && (
+                            <button className={styles.approveBtn} onClick={() => handleApprove(item.id)}>승인</button>
+                          )}
+                          <button className={styles.deleteActionBtn} onClick={() => handleDelete(item.id)}>삭제</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </section>
       </main>
 
       {isModalOpen && (
@@ -381,6 +480,47 @@ export default function AdminPage() {
                 <form onSubmit={handleSubmitBanner}>
                     <div className={styles.formGroup}><label>제목</label><input type="text" value={newBanner.title} onChange={e => setNewBanner({...newBanner, title: e.target.value})} required /></div>
                     <div className={styles.formGroup}><label>이미지</label><input type="file" ref={bannerInputRef} onChange={handleBannerFileUpload} /></div>
+                    <div className={styles.modalActions}>
+                        <button type="button" onClick={() => setIsModalOpen(false)}>취소</button>
+                        <button type="submit" disabled={uploading}>저장</button>
+                    </div>
+                </form>
+            ) : activeTab === 'members' ? (
+                <form onSubmit={handleSubmitMember}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                      <div className={styles.formGroup}><label>회사명</label><input type="text" value={newMember.company} onChange={e => setNewMember({...newMember, company: e.target.value})} required /></div>
+                      <div className={styles.formGroup}><label>대표자명</label><input type="text" value={newMember.representative} onChange={e => setNewMember({...newMember, representative: e.target.value})} required /></div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                      <div className={styles.formGroup}><label>담당자명</label><input type="text" value={newMember.name} onChange={e => setNewMember({...newMember, name: e.target.value})} required /></div>
+                      <div className={styles.formGroup}><label>연락처</label><input type="text" value={newMember.phone} onChange={e => setNewMember({...newMember, phone: e.target.value})} required /></div>
+                    </div>
+                    <div className={styles.formGroup}><label>이메일</label><input type="email" value={newMember.email} onChange={e => setNewMember({...newMember, email: e.target.value})} required /></div>
+                    <div className={styles.formGroup}><label>주요생산품</label><input type="text" value={newMember.mainProducts} onChange={e => setNewMember({...newMember, mainProducts: e.target.value})} required /></div>
+                    <div className={styles.formGroup}>
+                      <label>업체 이미지</label>
+                      <input type="file" multiple onChange={async (e) => {
+                        const files = e.target.files;
+                        if (!files) return;
+                        setUploading(true);
+                        const urls = [...newMember.imageUrls];
+                        for (let i = 0; i < files.length; i++) {
+                          const fd = new FormData();
+                          fd.append('file', files[i]);
+                          const res = await fetch('/api/upload-direct', { method: 'POST', body: fd });
+                          const data = await res.json();
+                          if (data.url) urls.push(data.url);
+                        }
+                        setNewMember({...newMember, imageUrls: urls});
+                        setUploading(false);
+                      }} />
+                      <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
+                        {newMember.imageUrls.map((url, i) => (
+                          <div key={i} style={{ width: '60px', height: '60px', borderRadius: '8px', background: `url(${url}) center/cover no-repeat`, border: '1px solid #ddd' }} />
+                        ))}
+                      </div>
+                    </div>
+                    <div className={styles.formGroup}><label>동영상 URL (YouTube)</label><input type="text" value={newMember.videoUrl} onChange={e => setNewMember({...newMember, videoUrl: e.target.value})} /></div>
                     <div className={styles.modalActions}>
                         <button type="button" onClick={() => setIsModalOpen(false)}>취소</button>
                         <button type="submit" disabled={uploading}>저장</button>

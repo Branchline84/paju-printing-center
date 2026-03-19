@@ -1,0 +1,280 @@
+.statusPage {
+  padding-bottom: 80px;
+}
+
+.titleSection {
+  padding: 80px 0 60px;
+  background: linear-gradient(135deg, #003366 0%, #0055aa 100%);
+  color: white;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.mainTitle {
+  font-size: 40px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.subTitle {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.statCard {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.statLabel {
+  font-size: 16px;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.statUnit {
+  font-size: 18px;
+  margin-left: 4px;
+  opacity: 0.7;
+}
+
+/* Table & Filter */
+.contentArea {
+  margin-top: 40px;
+}
+
+.filterRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.searchBox {
+  flex: 1;
+  min-width: 300px;
+  position: relative;
+}
+
+.searchBox input {
+  width: 100%;
+  padding: 15px 50px 15px 20px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.searchBox input:focus {
+  border-color: #003366;
+  box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.1);
+}
+
+.searchBtn {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.categoryFilter {
+  display: flex;
+  gap: 10px;
+}
+
+.filterBtn {
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.filterBtn.active {
+  background: #003366;
+  color: white;
+  border-color: #003366;
+}
+
+/* Table */
+.businessTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.businessTable th {
+  background: #f8fafc;
+  padding: 20px;
+  text-align: left;
+  font-weight: 700;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.businessTable td {
+  padding: 20px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #475569;
+}
+
+.companyName {
+  font-weight: 700;
+  color: #003366;
+  font-size: 17px;
+}
+
+.viewBtn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #003366;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.viewBtn:hover {
+  background: #003366;
+  color: white;
+}
+
+/* Expanded Row */
+.expandedRow td {
+  padding: 0;
+  background: #f8fafc;
+}
+
+.detailsContent {
+  padding: 40px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 40px;
+}
+
+.detailsInfo h4 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+.infoList {
+  list-style: none;
+}
+
+.infoItem {
+  display: flex;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.infoLabel {
+  width: 100px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.infoValue {
+  flex: 1;
+  color: #1e293b;
+}
+
+.mediaGallery {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.imageItem {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.imageItem:hover {
+  transform: scale(1.05);
+}
+
+.videoWrapper {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+}
+
+.videoWrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+@media (max-width: 992px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .detailsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .businessTable th:nth-child(2),
+  .businessTable td:nth-child(2) {
+    display: none;
+  }
+  
+  .mainTitle {
+    font-size: 28px;
+  }
+}
