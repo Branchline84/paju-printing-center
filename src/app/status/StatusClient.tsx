@@ -130,19 +130,29 @@ export default function StatusClient({ initialStats, initialMembers }: { initial
                               </ul>
                             </div>
                             
-                            <div className={styles.mediaArea}>
-                              {member.imageUrls && (
-                                <div className={styles.imageGrid} style={{ marginBottom: '20px' }}>
-                                  {JSON.parse(member.imageUrls).map((url: string, idx: number) => (
-                                    <div 
-                                      key={idx} 
-                                      className={styles.imageItem} 
-                                      style={{ backgroundImage: `url("${url}")` }}
-                                      onClick={() => window.open(url, '_blank')}
-                                    />
-                                  ))}
-                                </div>
-                              )}
+                              <div className={styles.mediaArea}>
+                                {(() => {
+                                  try {
+                                    const urls = member.imageUrls ? JSON.parse(member.imageUrls) : [];
+                                    if (Array.isArray(urls) && urls.length > 0) {
+                                      return (
+                                        <div className={styles.imageGrid} style={{ marginBottom: '20px' }}>
+                                          {urls.map((url: string, idx: number) => (
+                                            <div 
+                                              key={idx} 
+                                              className={styles.imageItem} 
+                                              style={{ backgroundImage: `url("${url}")` }}
+                                              onClick={() => window.open(url, '_blank')}
+                                            />
+                                          ))}
+                                        </div>
+                                      );
+                                    }
+                                  } catch (e) {
+                                    console.error("Failed to parse imageUrls:", e);
+                                  }
+                                  return null;
+                                })()}
                               
                               {member.videoUrl && (
                                 <div className={styles.videoWrapper}>

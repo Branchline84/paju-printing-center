@@ -207,7 +207,16 @@ export default function SignUpPage() {
                   <input type="file" multiple accept="image/*" onChange={handleFileUpload} disabled={uploading} />
                   <div style={{ display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
                     {form.imageUrls.map((url, i) => (
-                      <div key={i} style={{ width: '60px', height: '60px', borderRadius: '4px', background: `url(${url}) center/cover no-repeat`, border: '1px solid #ddd' }} />
+                      <div key={i} style={{ 
+                        width: '60px', 
+                        height: '60px', 
+                        borderRadius: '4px', 
+                        backgroundImage: `url("${url}")`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        border: '1px solid #ddd' 
+                      }} />
                     ))}
                     {uploading && <div style={{ fontSize: '12px', alignSelf: 'center' }}>업로드 중...</div>}
                   </div>
