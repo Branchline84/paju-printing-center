@@ -136,6 +136,136 @@
 .dustNormal { background: #ff9800; }
 .dustBad { background: #f44336; }
 
+/* ── 퀴즈 UI ── */
+.introDesc {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.quizProgress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+}
+
+.progressBar {
+  flex: 1;
+  height: 6px;
+  background: #e5e5e7;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #003366;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.optionLabel {
+  font-weight: 700;
+  margin-right: 4px;
+  color: #003366;
+}
+
+.optionCorrect {
+  background: #e8f5e9 !important;
+  border-color: #4caf50 !important;
+  color: #1b5e20 !important;
+}
+
+.optionCorrect .optionLabel {
+  color: #1b5e20;
+}
+
+.optionWrong {
+  background: #fce4ec !important;
+  border-color: #e53935 !important;
+  color: #b71c1c !important;
+}
+
+.optionWrong .optionLabel {
+  color: #b71c1c;
+}
+
+.explanation {
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.expCorrect {
+  background: #e8f5e9;
+  border-left: 4px solid #4caf50;
+}
+
+.expWrong {
+  background: #fce4ec;
+  border-left: 4px solid #e53935;
+}
+
+.explanation strong {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.explanation p {
+  margin: 0 0 12px;
+  color: #333;
+  font-size: 13px;
+}
+
+.nextBtn {
+  padding: 8px 20px;
+  background: #003366;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.nextBtn:hover { background: #004d99; }
+
+.scoreDisplay {
+  margin: 16px 0 12px;
+}
+
+.scoreNum {
+  font-size: 64px;
+  font-weight: 900;
+  color: #003366;
+}
+
+.scoreDen {
+  font-size: 28px;
+  color: #666;
+}
+
+.scoreMsg {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.actionBtnSecondary {
+  background: #888 !important;
+}
+
+.actionBtnSecondary:hover { background: #555 !important; }
+
 /* Modal Styling */
 .modalOverlay {
   position: fixed;
