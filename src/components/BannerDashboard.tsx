@@ -119,7 +119,7 @@ export default function BannerDashboard() {
         </div>
 
         {/* News Card (Integrated Ticker) */}
-        <div className={styles.card} onClick={handleNewsClick}>
+        <div className={`${styles.card} ${styles.newsCard}`} onClick={handleNewsClick}>
           <div className={styles.cardHeader}>● 실시간 소공인 뉴스</div>
           <div className={styles.newsCardContent}>
             {newsList.map((news, index) => (
