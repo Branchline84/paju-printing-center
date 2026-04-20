@@ -4,14 +4,15 @@ import { isAuthenticated } from '@/lib/auth';
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id: idStr } = await params;
   if (!(await isAuthenticated())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(idStr);
     await prisma.member.delete({
       where: { id },
     });
@@ -24,14 +25,15 @@ export async function DELETE(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id: idStr } = await params;
   if (!(await isAuthenticated())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(idStr);
     const body = await request.json();
     
     // We can handle approval or full update here
