@@ -304,22 +304,29 @@ export default function AdminPage() {
     const method = editingId ? 'PATCH' : 'POST';
     const url = editingId ? `/api/posts/${editingId}` : '/api/posts';
 
-    const res = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...newPost,
-        imageUrls: newPost.imageUrls,
-        fileUrls: newPost.fileUrls
-      })
-    });
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...newPost,
+          imageUrls: newPost.imageUrls,
+          fileUrls: newPost.fileUrls
+        })
+      });
 
-    if (res.ok) {
-      setIsModalOpen(false);
-      setEditingId(null);
-      setNewPost({ title: '', type: 'notice', content: '', author: '관리자', imageUrls: [], fileUrls: [], videoUrl: '' });
-      fetchData();
-      alert(editingId ? '게시물이 수정되었습니다.' : '게시물이 등록되었습니다.');
+      if (res.ok) {
+        setIsModalOpen(false);
+        setEditingId(null);
+        setNewPost({ title: '', type: 'notice', content: '', author: '관리자', imageUrls: [], fileUrls: [], videoUrl: '' });
+        fetchData();
+        alert(editingId ? '게시물이 수정되었습니다.' : '게시물이 등록되었습니다.');
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(`저장 실패 (${res.status}): ${err.error || '서버 오류가 발생했습니다.'}`);
+      }
+    } catch (error: unknown) {
+      alert(`네트워크 오류: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
     }
   };
 
@@ -328,18 +335,25 @@ export default function AdminPage() {
     const method = editingId ? 'PATCH' : 'POST';
     const url = editingId ? `/api/banners/${editingId}` : '/api/banners';
 
-    const res = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newBanner)
-    });
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newBanner)
+      });
 
-    if (res.ok) {
-      setIsModalOpen(false);
-      setEditingId(null);
-      setNewBanner({ title: '', subtitle: '', imageUrl: '', order: 0, isActive: true });
-      fetchData();
-      alert(editingId ? '배너가 수정되었습니다.' : '배너가 등록되었습니다.');
+      if (res.ok) {
+        setIsModalOpen(false);
+        setEditingId(null);
+        setNewBanner({ title: '', subtitle: '', imageUrl: '', order: 0, isActive: true });
+        fetchData();
+        alert(editingId ? '배너가 수정되었습니다.' : '배너가 등록되었습니다.');
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(`저장 실패 (${res.status}): ${err.error || '서버 오류가 발생했습니다.'}`);
+      }
+    } catch (error: unknown) {
+      alert(`네트워크 오류: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
     }
   };
 
