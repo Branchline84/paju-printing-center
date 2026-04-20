@@ -136,6 +136,63 @@
 .dustNormal { background: #ff9800; }
 .dustBad { background: #f44336; }
 
+/* ── 폭죽 이펙트 ── */
+.confettiWrap {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 24px;
+  z-index: 10;
+}
+
+.confettiPiece {
+  position: absolute;
+  top: -20px;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0%   { transform: translateY(0) rotate(0deg);   opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(600px) rotate(540deg); opacity: 0; }
+}
+
+/* ── 소공인 체커 ── */
+.checkerStepBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #003366;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.checkerNote {
+  font-size: 13px;
+  color: #555;
+  background: #f0f4ff;
+  border-left: 3px solid #003366;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.checkerWarning {
+  font-size: 13px;
+  color: #7a4f00;
+  background: #fff8e1;
+  border-left: 3px solid #f59e0b;
+  padding: 12px 14px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+
 /* ── 퀴즈 UI ── */
 .introDesc {
   font-size: 15px;

@@ -519,6 +519,39 @@ const ALL_QUIZ: QuizQuestion[] = [
   },
 ];
 
+const CONFETTI_COLORS = ['#003366', '#FFD700', '#4CAF50', '#FF5722', '#9C27B0', '#03A9F4', '#FF9800'];
+
+function Confetti() {
+  const pieces = Array.from({ length: 70 }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    delay: Math.random() * 1.5,
+    duration: 2 + Math.random() * 2,
+    color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+    size: 7 + Math.random() * 8,
+    isCircle: Math.random() > 0.5,
+  }));
+  return (
+    <div className={styles.confettiWrap}>
+      {pieces.map(p => (
+        <div
+          key={p.id}
+          className={styles.confettiPiece}
+          style={{
+            left: `${p.left}%`,
+            animationDelay: `${p.delay}s`,
+            animationDuration: `${p.duration}s`,
+            backgroundColor: p.color,
+            width: `${p.size}px`,
+            height: `${p.size}px`,
+            borderRadius: p.isCircle ? '50%' : '2px',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -544,8 +577,10 @@ export default function BannerDashboard() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [score, setScore] = useState(0);
 
-  // 소공인 체커 상태
-  const [checkResult, setCheckResult] = useState<string | null>(null);
+  // 소공인 체커 상태 (0: 업종, 1: 근로자 수, 2: 매출액, 3: 결과)
+  const [checkStep, setCheckStep] = useState(0);
+  const [checkFail, setCheckFail] = useState<string | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -622,7 +657,9 @@ export default function BannerDashboard() {
 
   const closeCheckQuiz = () => {
     setShowCheckQuiz(false);
-    setCheckResult(null);
+    setCheckStep(0);
+    setCheckFail(null);
+    setShowConfetti(false);
   };
 
   const scoreMessage = () => {
@@ -758,28 +795,109 @@ export default function BannerDashboard() {
       {showCheckQuiz && (
         <div className={styles.modalOverlay} onClick={closeCheckQuiz}>
           <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            {showConfetti && <Confetti />}
             <button className={styles.closeBtn} onClick={closeCheckQuiz}>✕</button>
             <div className={styles.modalTag}>자격 확인</div>
             <h2>소공인 지원대상 확인</h2>
-            {!checkResult ? (
+
+            {/* 실패 결과 */}
+            {checkFail && (
+              <div className={styles.resultView}>
+                <div className={styles.resultIcon}>⚠️</div>
+                <p style={{ color: '#c0392b', fontWeight: 600 }}>{checkFail}</p>
+                <button className={styles.actionBtn} onClick={closeCheckQuiz}>확인</button>
+              </div>
+            )}
+
+            {/* STEP 0: 주된 업종 확인 */}
+            {!checkFail && checkStep === 0 && (
               <>
+                <div className={styles.checkerStepBadge}>STEP 1 · 주된 업종 확인</div>
                 <div className={styles.quizQuestion}>
-                  귀사의 주된 업종이 제조(C)이며, 상시 근로자 수가 어떻게 되시나요?
+                  귀사의 <strong>전체 매출 중 제조업(C) 비중이 가장 높은가요?</strong>
+                </div>
+                <p className={styles.checkerNote}>
+                  💡 소공인은 제조업이 주된 업종이어야 합니다. 서비스·도소매 등 타 업종 매출이 더 높으면 해당되지 않습니다.
+                </p>
+                <div className={styles.quizOptions}>
+                  <button className={styles.optionBtn} onClick={() => setCheckStep(1)}>
+                    예, 제조업 매출이 가장 높습니다
+                  </button>
+                  <button className={styles.optionBtn} onClick={() => setCheckFail('소공인 지원은 제조업(C)이 주된 업종(매출 최대 비율)인 사업체에 해당합니다. 제조업 비중을 확인해 주세요.')}>
+                    아니오, 다른 업종 매출이 더 높습니다
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* STEP 1: 근로자 수 확인 */}
+            {!checkFail && checkStep === 1 && (
+              <>
+                <div className={styles.checkerStepBadge}>STEP 2 · 상시근로자 수 확인</div>
+                <div className={styles.quizQuestion}>
+                  귀사의 <strong>상시근로자 수</strong>는 몇 명인가요?
                 </div>
                 <div className={styles.quizOptions}>
-                  <button className={styles.optionBtn} onClick={() => setCheckResult('상시근로자 10인 미만 소공인 지원 대상에 해당됩니다!')}>
-                    10인 미만 (상시근로자)
+                  <button className={styles.optionBtn} onClick={() => setCheckStep(2)}>
+                    10인 미만
                   </button>
-                  <button className={styles.optionBtn} onClick={() => setCheckResult('상시근로자 10인 이상은 일반 중소기업 지원 프로그램을 확인해 보세요.')}>
+                  <button className={styles.optionBtn} onClick={() => setCheckFail('소공인은 상시근로자 10인 미만이어야 합니다. 중소기업 지원 프로그램(중소벤처기업부)을 확인해 보세요.')}>
                     10인 이상
                   </button>
                 </div>
               </>
-            ) : (
+            )}
+
+            {/* STEP 2: 매출액 확인 */}
+            {!checkFail && checkStep === 2 && (
+              <>
+                <div className={styles.checkerStepBadge}>STEP 3 · 연간 매출액 확인</div>
+                <div className={styles.quizQuestion}>
+                  귀사의 <strong>연간 매출액</strong>이 소기업 기준 이내인가요?
+                </div>
+                <div className={styles.checkerWarning}>
+                  ⚠️ <strong>매출액 기준은 업종별로 상이합니다.</strong><br />
+                  정확한 기준은 반드시 중소기업현황정보시스템(sminfo.mss.go.kr) 또는 저희 센터에서 확인하시기 바랍니다.
+                  <br /><br />
+                  예시: 인쇄업(제조C) — 평균 매출액 120억원 이하 소기업 기준 적용
+                </div>
+                <div className={styles.quizOptions}>
+                  <button className={styles.optionBtn} onClick={() => { setCheckStep(3); setShowConfetti(true); }}>
+                    예, 기준 이내로 확인됩니다
+                  </button>
+                  <button className={styles.optionBtn} onClick={() => setCheckFail('매출액 기준을 초과하는 경우 소기업 지원 대상이 아닐 수 있습니다. 센터에 문의하시면 정확한 안내를 받으실 수 있습니다.')}>
+                    확인이 필요하거나 기준 초과입니다
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* STEP 3: 최종 결과 — 안정권 */}
+            {!checkFail && checkStep === 3 && (
               <div className={styles.resultView}>
-                <div className={styles.resultIcon}>📢</div>
-                <p>{checkResult}</p>
-                <button className={styles.actionBtn} onClick={closeCheckQuiz}>확인</button>
+                <div className={styles.resultIcon}>🎉</div>
+                <h3 style={{ color: '#003366', marginBottom: '8px' }}>소공인 지원 대상에 해당됩니다!</h3>
+                <p style={{ color: '#555', lineHeight: '1.7', marginBottom: '8px' }}>
+                  ✅ 주된 업종: 제조업(C)<br />
+                  ✅ 상시근로자: 10인 미만<br />
+                  ✅ 연간 매출액: 기준 이내
+                </p>
+                <p style={{ color: '#777', fontSize: '13px', marginBottom: '24px' }}>
+                  파주인쇄소공인특화지원센터와 함께 성장하세요!<br />
+                  회원으로 가입하시면 전용 지원사업, 교육, 컨설팅을 우선 제공받으실 수 있습니다.
+                </p>
+                <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <button
+                    className={styles.actionBtn}
+                    style={{ background: '#003366', fontSize: '16px', padding: '14px 32px' }}
+                    onClick={() => { closeCheckQuiz(); router.push('/signup'); }}
+                  >
+                    🚀 센터 회원가입 하기
+                  </button>
+                  <button className={`${styles.actionBtn} ${styles.actionBtnSecondary}`} onClick={closeCheckQuiz}>
+                    나중에
+                  </button>
+                </div>
               </div>
             )}
           </div>
