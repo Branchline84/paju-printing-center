@@ -11,13 +11,27 @@ export async function POST(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: '업로드할 파일이 없습니다.' }, { status: 400 });
     }
 
-    // 파일 형색 제한 (이미지 및 동영상만)
     const allowedTypes = [
       'image/jpeg', 'image/png', 'image/gif', 'image/webp',
-      'video/mp4', 'video/webm', 'video/quicktime'
+      'video/mp4', 'video/webm', 'video/quicktime',
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'application/zip', 'application/x-zip-compressed',
+      'application/haansofthwp', 'application/x-hwp',
     ];
-    if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json({ error: '허용되지 않는 파일 형식입니다. (이미지 및 MP4/WebM 동영상만 가능)' }, { status: 400 });
+
+    // MIME type이 빈 문자열로 오는 경우 확장자로 보완 검사
+    const ext = (file.name.split('.').pop() || '').toLowerCase();
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'webm', 'mov', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'hwp'];
+    const typeOk = allowedTypes.includes(file.type) || allowedExtensions.includes(ext);
+
+    if (!typeOk) {
+      return NextResponse.json({ error: '허용되지 않는 파일 형식입니다.' }, { status: 400 });
     }
 
     // 파일명 난수화 (UUID)

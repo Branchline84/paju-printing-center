@@ -5,11 +5,19 @@ import Header from '@/components/Header';
 import styles from './Contact.module.css';
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '', hp: '' });
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Honeypot check
+    if (form.hp) {
+      console.log('Spam detected');
+      setSubmitted(true);
+      return;
+    }
+
     try {
       await fetch('/api/inquiries', {
         method: 'POST',
@@ -34,6 +42,15 @@ export default function ContactPage() {
         ) : (
           <form onSubmit={handleSubmit} className={styles.form}>
             <h2 className={styles.title}>문의하기</h2>
+            <input 
+              type="text" 
+              name="hp"
+              value={form.hp}
+              onChange={e => setForm({...form, hp: e.target.value})}
+              style={{ display: 'none' }}
+              tabIndex={-1}
+              autoComplete="off"
+            />
             <input 
               type="text" 
               placeholder="성함" 

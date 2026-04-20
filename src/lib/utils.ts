@@ -76,22 +76,46 @@ export function getProxyUrl(url: string | null | undefined): string {
   return url;
 }
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function isSafeUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
 /**
- * Basic Markdown to HTML converter for post content.
- * Supports Bold, Italic, and Lists.
+ * XSS-safe Markdown to HTML converter.
+ * HTML entities are escaped before markdown processing to prevent injection.
  */
 export function renderMarkdown(content: string | null | undefined): string {
   if (!content) return '';
-  
-  return content
+
+  const escaped = escapeHtml(content);
+
+  return escaped
     .replace(/^### (.*$)/gm, '<h3>$1</h3>')
-    .replace(/^> (.*$)/gm, '<blockquote>$1</blockquote>')
+    .replace(/^&gt; (.*$)/gm, '<blockquote>$1</blockquote>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
     .replace(/^- (.*$)/gm, '<li>$1</li>')
-    .replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>') // Simple list wrap
-    .replace(/(<\/ul>\s*<ul>)/g, '')            // Merge adjacent lists
-    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: #003366; text-decoration: underline;">$1</a>')
+    .replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>')
+    .replace(/(<\/ul>\s*<ul>)/g, '')
+    .replace(/\[(.*?)\]\((.*?)\)/g, (_, text, url) => {
+      const decodedUrl = url.replace(/&amp;/g, '&');
+      if (!isSafeUrl(decodedUrl)) return escapeHtml(`[${text}](${url})`);
+      return `<a href="${decodedUrl}" target="_blank" rel="noopener noreferrer" style="color: #003366; text-decoration: underline;">${text}</a>`;
+    })
     .replace(/\n/g, '<br />');
 }
 

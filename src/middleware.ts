@@ -2,9 +2,13 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.ADMIN_JWT_SECRET || 'paju-printing-center-secret-key-2024'
-);
+function getJwtSecret(): Uint8Array {
+  const secret = process.env.ADMIN_JWT_SECRET;
+  if (!secret) {
+    throw new Error('ADMIN_JWT_SECRET 환경변수가 설정되지 않았습니다.');
+  }
+  return new TextEncoder().encode(secret);
+}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -22,7 +26,7 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      await jwtVerify(token, JWT_SECRET);
+      await jwtVerify(token, getJwtSecret());
       return NextResponse.next();
     } catch (err) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
@@ -56,7 +60,7 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      await jwtVerify(token, JWT_SECRET);
+      await jwtVerify(token, getJwtSecret());
       return NextResponse.next();
     } catch (err) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

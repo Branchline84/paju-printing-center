@@ -70,7 +70,7 @@ export default function AdminPage() {
       }
 
       let url = '/api/posts';
-      if (activeTab === 'banners') url = '/api/banners';
+      if (activeTab === 'banners') url = '/api/banners?all=true';
       if (activeTab === 'members') url = '/api/members';
       if (activeTab === 'inquiries') url = '/api/inquiries';
       if (activeTab === 'resources') url = '/api/posts?type=resource';
@@ -529,11 +529,45 @@ export default function AdminPage() {
             <h3>{editingId ? '수정하기' : '새로 만들기'}</h3>
             {activeTab === 'banners' ? (
                 <form onSubmit={handleSubmitBanner}>
-                    <div className={styles.formGroup}><label>제목</label><input type="text" value={newBanner.title} onChange={e => setNewBanner({...newBanner, title: e.target.value})} required /></div>
-                    <div className={styles.formGroup}><label>이미지</label><input type="file" ref={bannerInputRef} onChange={handleBannerFileUpload} /></div>
+                    <div className={styles.formGroup}>
+                        <label>제목</label>
+                        <input type="text" value={newBanner.title} onChange={e => setNewBanner({...newBanner, title: e.target.value})} required placeholder="배너 메인 제목" />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>부제목(내용)</label>
+                        <input type="text" value={newBanner.subtitle} onChange={e => setNewBanner({...newBanner, subtitle: e.target.value})} placeholder="배너 설명 문구" />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>배너 이미지</label>
+                        <input type="file" accept="image/*" ref={bannerInputRef} onChange={handleBannerFileUpload} />
+                        {uploading && <p style={{ fontSize: '13px', color: '#0066cc', marginTop: '6px' }}>업로드 중...</p>}
+                        {newBanner.imageUrl && !uploading && (
+                            <div style={{ marginTop: '10px' }}>
+                                <p style={{ fontSize: '12px', color: '#27ae60', marginBottom: '6px' }}>✓ 이미지 업로드 완료</p>
+                                <img
+                                    src={`/api/proxy-image?url=${encodeURIComponent(newBanner.imageUrl)}`}
+                                    alt="배너 미리보기"
+                                    style={{ maxWidth: '100%', maxHeight: '160px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #ddd' }}
+                                />
+                            </div>
+                        )}
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <div className={styles.formGroup}>
+                            <label>표시 순서</label>
+                            <input type="number" min="0" value={newBanner.order} onChange={e => setNewBanner({...newBanner, order: parseInt(e.target.value) || 0})} />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label>활성화</label>
+                            <select value={newBanner.isActive ? 'true' : 'false'} onChange={e => setNewBanner({...newBanner, isActive: e.target.value === 'true'})}>
+                                <option value="true">활성</option>
+                                <option value="false">비활성</option>
+                            </select>
+                        </div>
+                    </div>
                     <div className={styles.modalActions}>
                         <button type="button" onClick={() => setIsModalOpen(false)}>취소</button>
-                        <button type="submit" disabled={uploading}>저장</button>
+                        <button type="submit" disabled={uploading}>{uploading ? '업로드 중...' : '저장'}</button>
                     </div>
                 </form>
             ) : activeTab === 'members' ? (
