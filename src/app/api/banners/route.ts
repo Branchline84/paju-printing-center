@@ -19,17 +19,24 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+
+    if (!body.title?.trim()) {
+      return NextResponse.json({ error: '제목을 입력해주세요.' }, { status: 400 });
+    }
+
     const banner = await prisma.banner.create({
       data: {
-        title: body.title,
-        subtitle: body.subtitle,
-        imageUrl: body.imageUrl,
-        order: body.order || 0,
-        isActive: body.isActive ?? true
+        title: body.title.trim(),
+        subtitle: body.subtitle?.trim() || null,
+        imageUrl: body.imageUrl || '',
+        order: Number(body.order) || 0,
+        isActive: body.isActive ?? true,
       }
     });
     return NextResponse.json(banner);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to create banner' }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('[Banner POST] Error:', message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

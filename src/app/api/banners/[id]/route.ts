@@ -11,16 +11,18 @@ export async function PATCH(
     const banner = await prisma.banner.update({
       where: { id: parseInt(id) },
       data: {
-        title: body.title,
-        subtitle: body.subtitle,
-        imageUrl: body.imageUrl,
-        order: body.order,
-        isActive: body.isActive
+        title: body.title?.trim(),
+        subtitle: body.subtitle?.trim() || null,
+        imageUrl: body.imageUrl || '',
+        order: Number(body.order) || 0,
+        isActive: body.isActive ?? true,
       }
     });
     return NextResponse.json(banner);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to update banner' }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('[Banner PATCH] Error:', message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
