@@ -22,7 +22,7 @@ const nextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://*.vercel-storage.com https://img.youtube.com https://i.ytimg.com",
               "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
-              "connect-src 'self' https://*.vercel-storage.com https://news.google.com",
+              "connect-src 'self' https://*.vercel-storage.com https://news.google.com https://api.open-meteo.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
