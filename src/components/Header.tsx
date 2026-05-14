@@ -73,7 +73,7 @@ export default function Header() {
             <img src="/logo.png" alt="Logo" className={styles.logoImg} />
             <div className={styles.logoText}>
               <span className={styles.title}>{t('centerName')}</span>
-              <span className={styles.subtitle}>{t('centerSubtitle')} (v1.2 TEST)</span>
+              <span className={styles.subtitle}>{t('centerSubtitle')}</span>
             </div>
           </Link>
         </div>
