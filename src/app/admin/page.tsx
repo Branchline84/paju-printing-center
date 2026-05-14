@@ -202,6 +202,12 @@ export default function AdminPage() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    // Limit check
+    if (newPost.imageUrls.length + files.length > 10) {
+      alert('이미지는 최대 10장까지만 업로드할 수 있습니다.');
+      return;
+    }
+
     setUploading(true);
     setUploadProgress(0);
 
@@ -239,6 +245,12 @@ export default function AdminPage() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    // Limit check
+    if (newPost.fileUrls.length + files.length > 10) {
+      alert('첨부파일은 최대 10개까지만 업로드할 수 있습니다.');
+      return;
+    }
+
     setUploading(true);
     for (let i = 0; i < files.length; i++) {
         try {
@@ -268,6 +280,20 @@ export default function AdminPage() {
     }
     setUploading(false);
     if (resourceFileInputRef.current) resourceFileInputRef.current.value = '';
+  };
+
+  const removePostImage = (index: number) => {
+    setNewPost(prev => ({
+      ...prev,
+      imageUrls: prev.imageUrls.filter((_, i) => i !== index)
+    }));
+  };
+
+  const removePostFile = (index: number) => {
+    setNewPost(prev => ({
+      ...prev,
+      fileUrls: prev.fileUrls.filter((_, i) => i !== index)
+    }));
   };
 
   const handleBannerFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -651,8 +677,31 @@ export default function AdminPage() {
                         </select>
                     </div>
                     <div className={styles.formGroup}><label>제목</label><input type="text" value={newPost.title} onChange={e => setNewPost({...newPost, title: e.target.value})} required /></div>
-                    <div className={styles.formGroup}><label>이미지</label><input type="file" multiple ref={fileInputRef} onChange={handleFileUpload} /></div>
-                    <div className={styles.formGroup}><label>첨부파일</label><input type="file" multiple ref={resourceFileInputRef} onChange={handleResourceFileUpload} /></div>
+                    <div className={styles.formGroup}>
+                      <label>이미지 (최대 10장)</label>
+                      <input type="file" multiple accept="image/*" ref={fileInputRef} onChange={handleFileUpload} />
+                      <p className={styles.uploadLimit}>현재 {newPost.imageUrls.length}/10장 업로드됨</p>
+                      <div className={styles.previewGrid}>
+                        {newPost.imageUrls.map((url, i) => (
+                          <div key={i} className={styles.previewItem} style={{ backgroundImage: `url("/api/proxy-image?url=${encodeURIComponent(url)}")` }}>
+                            <button type="button" className={styles.removeBtn} onClick={() => removePostImage(i)}>×</button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label>첨부파일 (최대 10개)</label>
+                      <input type="file" multiple ref={resourceFileInputRef} onChange={handleResourceFileUpload} />
+                      <p className={styles.uploadLimit}>현재 {newPost.fileUrls.length}/10개 업로드됨</p>
+                      <div style={{ marginTop: '8px' }}>
+                        {newPost.fileUrls.map((url, i) => (
+                          <div key={i} className={styles.filePreviewItem}>
+                            <span className={styles.fileName}>{decodeURIComponent(url.split('/').pop() || 'file')}</span>
+                            <button type="button" className={styles.fileRemoveBtn} onClick={() => removePostFile(i)}>삭제</button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                     <div className={styles.formGroup}><label>내용</label>
                         <textarea ref={textareaRef} value={newPost.content} onChange={e => setNewPost({...newPost, content: e.target.value})} required />
                     </div>
