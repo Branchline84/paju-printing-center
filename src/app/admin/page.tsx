@@ -199,12 +199,13 @@ export default function AdminPage() {
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+    const files = Array.from(e.target.files ?? []);
+    if (files.length === 0) return;
 
-    // Limit check
-    if (newPost.imageUrls.length + files.length > 10) {
-      alert('이미지는 최대 10장까지만 업로드할 수 있습니다.');
+    const current = newPost.imageUrls.length;
+    if (current + files.length > 10) {
+      alert(`이미지는 최대 10장까지 업로드할 수 있습니다. (현재 ${current}장)`);
+      if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
 
@@ -212,32 +213,32 @@ export default function AdminPage() {
     setUploadProgress(0);
 
     for (let i = 0; i < files.length; i++) {
-        try {
-            const file = files[i];
-            const resizedBlob = await resizeImage(file);
-            const formData = new FormData();
-            formData.append('file', resizedBlob, file.name);
+      try {
+        const file = files[i];
+        const resizedBlob = await resizeImage(file);
+        const formData = new FormData();
+        formData.append('file', resizedBlob instanceof File ? resizedBlob : new File([resizedBlob], file.name, { type: 'image/jpeg' }));
 
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
+        const response = await fetch('/api/upload', { method: 'POST', body: formData });
 
-            if (!response.ok) throw new Error('업로드 중 오류 발생');
-
-            const newBlob = await response.json();
-            if (newBlob.url) {
-                setNewPost(prev => ({
-                    ...prev,
-                    imageUrls: [...prev.imageUrls, newBlob.url]
-                }));
-            }
-        } catch (error: any) {
-            console.error('Upload failed', error);
-            alert(`업로드 실패: ${error.message}`);
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || `서버 오류 (${response.status})`);
         }
+
+        const newBlob = await response.json();
+        if (newBlob.url) {
+          setNewPost(prev => ({ ...prev, imageUrls: [...prev.imageUrls, newBlob.url] }));
+        }
+        setUploadProgress(Math.round(((i + 1) / files.length) * 100));
+      } catch (error: unknown) {
+        const msg = error instanceof Error ? error.message : '알 수 없는 오류';
+        console.error('Upload failed', error);
+        alert(`이미지 업로드 실패: ${msg}`);
+      }
     }
     setUploading(false);
+    setUploadProgress(0);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -679,7 +680,7 @@ export default function AdminPage() {
                     <div className={styles.formGroup}><label>제목</label><input type="text" value={newPost.title} onChange={e => setNewPost({...newPost, title: e.target.value})} required /></div>
                     <div className={styles.formGroup}>
                       <label>이미지 (최대 10장)</label>
-                      <input type="file" multiple accept="image/*" ref={fileInputRef} onChange={handleFileUpload} />
+                      <input type="file" multiple accept="image/*" ref={fileInputRef} onChange={handleFileUpload} disabled={uploading} />
                       <p className={styles.uploadLimit}>현재 {newPost.imageUrls.length}/10장 업로드됨</p>
                       <div className={styles.previewGrid}>
                         {newPost.imageUrls.map((url, i) => (
