@@ -34,12 +34,17 @@ export async function POST(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: '허용되지 않는 파일 형식입니다.' }, { status: 400 });
     }
 
-    // 파일명 난수화 (UUID)
-    const extension = file.name.split('.').pop();
+    // 파일명 난수화 (UUID) 및 확장자 추출
+    const fileNameParts = file.name.split('.');
+    const extension = fileNameParts.length > 1 ? fileNameParts.pop() : 'bin';
     const safeFileName = `upload-${uuidv4()}.${extension}`;
 
     // Vercel Blob으로 업로드 (Server-side put)
-    // Client-side resizing will ensure file size is < 4.5MB limit
+    if (!process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN.includes('xxxx')) {
+      console.error('[Upload API] Missing or placeholder BLOB_READ_WRITE_TOKEN');
+      return NextResponse.json({ error: '서버 설정 오류: Vercel Blob 토큰이 설정되지 않았습니다.' }, { status: 500 });
+    }
+
     const blob = await put(safeFileName, file, {
       access: 'private',
     });
