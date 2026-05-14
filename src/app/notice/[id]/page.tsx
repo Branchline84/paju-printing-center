@@ -72,45 +72,52 @@ export default function NoticeDetailPage() {
           </header>
 
           {images.length > 0 && (
-            <div className={styles.sliderContainer}>
-              <div 
-                className={styles.sliderWrapper} 
-                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-              >
-                {images.map((url: string, idx: number) => (
-                  <div key={idx} className={styles.slide}>
-                    <img 
-                      src={getProxyUrl(url)} 
-                      alt={`image-${idx}`} 
-                      onLoad={(e) => {
-                        const img = e.target as HTMLImageElement;
-                        if (img.naturalWidth > img.naturalHeight) {
-                          img.style.objectFit = 'cover'; // For landscape, fill to look premium
-                        } else {
-                          img.style.objectFit = 'contain'; // For portrait, show all
-                        }
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-              
-              {images.length > 1 && (
-                <>
-                  <button className={`${styles.navBtn} ${styles.prev}`} onClick={prevSlide}>&#10094;</button>
-                  <button className={`${styles.navBtn} ${styles.next}`} onClick={nextSlide}>&#10095;</button>
-                  <div className={styles.dots}>
-                    {images.map((_: any, idx: number) => (
-                      <button 
-                        key={idx} 
-                        className={`${styles.dot} ${idx === currentSlide ? styles.dotActive : ''}`} 
-                        onClick={() => setCurrentSlide(idx)}
+            <>
+              <div className={styles.sliderContainer}>
+                <div 
+                  className={styles.sliderWrapper} 
+                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                >
+                  {images.map((url: string, idx: number) => (
+                    <div key={idx} className={styles.slide}>
+                      <img 
+                        src={getProxyUrl(url)} 
+                        alt={`image-${idx}`} 
+                        onLoad={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          if (img.naturalWidth > img.naturalHeight) {
+                            img.style.objectFit = 'cover';
+                          } else {
+                            img.style.objectFit = 'contain';
+                          }
+                        }}
                       />
-                    ))}
-                  </div>
-                </>
+                    </div>
+                  ))}
+                </div>
+                
+                {images.length > 1 && (
+                  <>
+                    <button className={`${styles.navBtn} ${styles.prev}`} onClick={prevSlide}>&#10094;</button>
+                    <button className={`${styles.navBtn} ${styles.next}`} onClick={nextSlide}>&#10095;</button>
+                  </>
+                )}
+              </div>
+
+              {images.length > 1 && (
+                <div className={styles.thumbnailContainer}>
+                  {images.map((url: string, idx: number) => (
+                    <button 
+                      key={idx} 
+                      className={`${styles.thumbnail} ${idx === currentSlide ? styles.thumbnailActive : ''}`}
+                      onClick={() => setCurrentSlide(idx)}
+                    >
+                      <img src={getProxyUrl(url)} alt={`thumb-${idx}`} />
+                    </button>
+                  ))}
+                </div>
               )}
-            </div>
+            </>
           )}
 
           <div 
